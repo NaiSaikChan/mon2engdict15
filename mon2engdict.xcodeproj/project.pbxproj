@@ -13,6 +13,10 @@
 		71BB72D82C9A403600138B14 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 71BB72D72C9A403600138B14 /* Preview Assets.xcassets */; };
 		71BB72DA2C9A403600138B14 /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71BB72D92C9A403600138B14 /* Persistence.swift */; };
 		71BB72DD2C9A403600138B14 /* mon2engdict.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 71BB72DB2C9A403600138B14 /* mon2engdict.xcdatamodeld */; };
+		71BB72E52C9A441A00138B14 /* Pyidaungsu-2.5.3_Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 71BB72E42C9A441A00138B14 /* Pyidaungsu-2.5.3_Regular.ttf */; };
+		71BB72E72C9A444D00138B14 /* Mon3Anonta1.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 71BB72E62C9A444D00138B14 /* Mon3Anonta1.ttf */; };
+		71BB72EA2C9A44B700138B14 /* MonLocalization.strings in Resources */ = {isa = PBXBuildFile; fileRef = 71BB72EC2C9A44B700138B14 /* MonLocalization.strings */; };
+		71BB72EE2C9A461A00138B14 /* mondict.json in Resources */ = {isa = PBXBuildFile; fileRef = 71BB72ED2C9A461A00138B14 /* mondict.json */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -23,6 +27,10 @@
 		71BB72D72C9A403600138B14 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		71BB72D92C9A403600138B14 /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
 		71BB72DC2C9A403600138B14 /* mon2engdict.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = mon2engdict.xcdatamodel; sourceTree = "<group>"; };
+		71BB72E42C9A441A00138B14 /* Pyidaungsu-2.5.3_Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Pyidaungsu-2.5.3_Regular.ttf"; sourceTree = "<group>"; };
+		71BB72E62C9A444D00138B14 /* Mon3Anonta1.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Mon3Anonta1.ttf; sourceTree = "<group>"; };
+		71BB72EB2C9A44B700138B14 /* my-MM */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "my-MM"; path = "my-MM.lproj/MonLocalization.strings"; sourceTree = "<group>"; };
+		71BB72ED2C9A461A00138B14 /* mondict.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = mondict.json; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -55,6 +63,7 @@
 		71BB72CF2C9A403300138B14 /* mon2engdict */ = {
 			isa = PBXGroup;
 			children = (
+				71BB72E32C9A43F600138B14 /* Helper */,
 				71BB72D02C9A403300138B14 /* mon2engdictApp.swift */,
 				71BB72D22C9A403300138B14 /* ContentView.swift */,
 				71BB72D42C9A403600138B14 /* Assets.xcassets */,
@@ -71,6 +80,17 @@
 				71BB72D72C9A403600138B14 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		71BB72E32C9A43F600138B14 /* Helper */ = {
+			isa = PBXGroup;
+			children = (
+				71BB72E62C9A444D00138B14 /* Mon3Anonta1.ttf */,
+				71BB72E42C9A441A00138B14 /* Pyidaungsu-2.5.3_Regular.ttf */,
+				71BB72ED2C9A461A00138B14 /* mondict.json */,
+				71BB72EC2C9A44B700138B14 /* MonLocalization.strings */,
+			);
+			path = Helper;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -115,6 +135,7 @@
 			knownRegions = (
 				en,
 				Base,
+				"my-MM",
 			);
 			mainGroup = 71BB72C42C9A403300138B14;
 			productRefGroup = 71BB72CE2C9A403300138B14 /* Products */;
@@ -131,7 +152,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				71BB72E52C9A441A00138B14 /* Pyidaungsu-2.5.3_Regular.ttf in Resources */,
 				71BB72D82C9A403600138B14 /* Preview Assets.xcassets in Resources */,
+				71BB72E72C9A444D00138B14 /* Mon3Anonta1.ttf in Resources */,
+				71BB72EA2C9A44B700138B14 /* MonLocalization.strings in Resources */,
+				71BB72EE2C9A461A00138B14 /* mondict.json in Resources */,
 				71BB72D52C9A403600138B14 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -151,6 +176,17 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		71BB72EC2C9A44B700138B14 /* MonLocalization.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				71BB72EB2C9A44B700138B14 /* my-MM */,
+			);
+			name = MonLocalization.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		71BB72DE2C9A403600138B14 /* Debug */ = {
@@ -204,7 +240,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -259,7 +295,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -285,11 +321,12 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.maraohnonpon.mon2engdict;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -314,11 +351,12 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.maraohnonpon.mon2engdict;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
