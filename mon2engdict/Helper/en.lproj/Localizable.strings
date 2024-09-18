@@ -1,0 +1,20 @@
+/* 
+  MonLocalization.strings
+  mon2engdict
+
+  Created by Saik Chan on 18/9/24.
+  
+*/
+
+"Edit" = "Edit";
+"Appearance" = "Appearance";
+"Dark Mode" = "Dark Mode";
+"Language" = "Language";
+"App Language" = "App Language";
+"English" = "English";
+"Mon" = "Mon";
+"About" = "About";
+"Add Item" = "Add Item";
+"Select an item" = "Select an item";
+"Time" = "Time";
+"Setting" = "Setting";

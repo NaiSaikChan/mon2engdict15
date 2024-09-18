@@ -1,0 +1,20 @@
+/* 
+  MonLocalization.strings
+  mon2engdict
+
+  Created by Saik Chan on 18/9/24.
+  
+*/
+
+"Edit" = "ပဠေဝ်";
+"Appearance" = "ထမံက်";
+"Dark Mode" = "ဂၠု";
+"Language" = "ဘာသာ";
+"App Language" = "ဘာသာအေပ်";
+"English" = "အၚ်္ဂလိက်";
+"Mon" = "မန်";
+"About" = "ပရောပရာ";
+"Add Item" = "ထပ်စုတ်";
+"Select an item" = "ရုဲကေတ်";
+"Time" = "အခိၚ်";
+"Setting" = "တၚ်ချိၚ်";

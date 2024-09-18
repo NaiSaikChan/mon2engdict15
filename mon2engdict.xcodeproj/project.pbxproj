@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		717074852C9B11F000775317 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 717074842C9B11F000775317 /* SettingsView.swift */; };
+		717074872C9B1D8E00775317 /* LanguageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 717074862C9B1D8E00775317 /* LanguageManager.swift */; };
 		71BB72D12C9A403300138B14 /* mon2engdictApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71BB72D02C9A403300138B14 /* mon2engdictApp.swift */; };
 		71BB72D32C9A403300138B14 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71BB72D22C9A403300138B14 /* ContentView.swift */; };
 		71BB72D52C9A403600138B14 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 71BB72D42C9A403600138B14 /* Assets.xcassets */; };
@@ -15,11 +17,15 @@
 		71BB72DD2C9A403600138B14 /* mon2engdict.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 71BB72DB2C9A403600138B14 /* mon2engdict.xcdatamodeld */; };
 		71BB72E52C9A441A00138B14 /* Pyidaungsu-2.5.3_Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 71BB72E42C9A441A00138B14 /* Pyidaungsu-2.5.3_Regular.ttf */; };
 		71BB72E72C9A444D00138B14 /* Mon3Anonta1.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 71BB72E62C9A444D00138B14 /* Mon3Anonta1.ttf */; };
-		71BB72EA2C9A44B700138B14 /* MonLocalization.strings in Resources */ = {isa = PBXBuildFile; fileRef = 71BB72EC2C9A44B700138B14 /* MonLocalization.strings */; };
+		71BB72EA2C9A44B700138B14 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 71BB72EC2C9A44B700138B14 /* Localizable.strings */; };
 		71BB72EE2C9A461A00138B14 /* mondict.json in Resources */ = {isa = PBXBuildFile; fileRef = 71BB72ED2C9A461A00138B14 /* mondict.json */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		717074822C9B10B700775317 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		717074832C9B110600775317 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		717074842C9B11F000775317 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		717074862C9B1D8E00775317 /* LanguageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageManager.swift; sourceTree = "<group>"; };
 		71BB72CD2C9A403300138B14 /* mon2engdict.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = mon2engdict.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		71BB72D02C9A403300138B14 /* mon2engdictApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = mon2engdictApp.swift; sourceTree = "<group>"; };
 		71BB72D22C9A403300138B14 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -29,7 +35,7 @@
 		71BB72DC2C9A403600138B14 /* mon2engdict.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = mon2engdict.xcdatamodel; sourceTree = "<group>"; };
 		71BB72E42C9A441A00138B14 /* Pyidaungsu-2.5.3_Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Pyidaungsu-2.5.3_Regular.ttf"; sourceTree = "<group>"; };
 		71BB72E62C9A444D00138B14 /* Mon3Anonta1.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Mon3Anonta1.ttf; sourceTree = "<group>"; };
-		71BB72EB2C9A44B700138B14 /* my-MM */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "my-MM"; path = "my-MM.lproj/MonLocalization.strings"; sourceTree = "<group>"; };
+		71BB72EB2C9A44B700138B14 /* my-MM */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "my-MM"; path = "my-MM.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		71BB72ED2C9A461A00138B14 /* mondict.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = mondict.json; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -44,6 +50,24 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		717074802C9B0CC400775317 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				717074842C9B11F000775317 /* SettingsView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		717074812C9B0CE200775317 /* DataModel */ = {
+			isa = PBXGroup;
+			children = (
+				71BB72DB2C9A403600138B14 /* mon2engdict.xcdatamodeld */,
+				71BB72ED2C9A461A00138B14 /* mondict.json */,
+				717074862C9B1D8E00775317 /* LanguageManager.swift */,
+			);
+			path = DataModel;
+			sourceTree = "<group>";
+		};
 		71BB72C42C9A403300138B14 = {
 			isa = PBXGroup;
 			children = (
@@ -63,12 +87,14 @@
 		71BB72CF2C9A403300138B14 /* mon2engdict */ = {
 			isa = PBXGroup;
 			children = (
+				717074822C9B10B700775317 /* Info.plist */,
+				717074812C9B0CE200775317 /* DataModel */,
+				717074802C9B0CC400775317 /* Views */,
 				71BB72E32C9A43F600138B14 /* Helper */,
 				71BB72D02C9A403300138B14 /* mon2engdictApp.swift */,
-				71BB72D22C9A403300138B14 /* ContentView.swift */,
 				71BB72D42C9A403600138B14 /* Assets.xcassets */,
+				71BB72D22C9A403300138B14 /* ContentView.swift */,
 				71BB72D92C9A403600138B14 /* Persistence.swift */,
-				71BB72DB2C9A403600138B14 /* mon2engdict.xcdatamodeld */,
 				71BB72D62C9A403600138B14 /* Preview Content */,
 			);
 			path = mon2engdict;
@@ -87,8 +113,7 @@
 			children = (
 				71BB72E62C9A444D00138B14 /* Mon3Anonta1.ttf */,
 				71BB72E42C9A441A00138B14 /* Pyidaungsu-2.5.3_Regular.ttf */,
-				71BB72ED2C9A461A00138B14 /* mondict.json */,
-				71BB72EC2C9A44B700138B14 /* MonLocalization.strings */,
+				71BB72EC2C9A44B700138B14 /* Localizable.strings */,
 			);
 			path = Helper;
 			sourceTree = "<group>";
@@ -155,7 +180,7 @@
 				71BB72E52C9A441A00138B14 /* Pyidaungsu-2.5.3_Regular.ttf in Resources */,
 				71BB72D82C9A403600138B14 /* Preview Assets.xcassets in Resources */,
 				71BB72E72C9A444D00138B14 /* Mon3Anonta1.ttf in Resources */,
-				71BB72EA2C9A44B700138B14 /* MonLocalization.strings in Resources */,
+				71BB72EA2C9A44B700138B14 /* Localizable.strings in Resources */,
 				71BB72EE2C9A461A00138B14 /* mondict.json in Resources */,
 				71BB72D52C9A403600138B14 /* Assets.xcassets in Resources */,
 			);
@@ -168,8 +193,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				717074852C9B11F000775317 /* SettingsView.swift in Sources */,
 				71BB72DA2C9A403600138B14 /* Persistence.swift in Sources */,
 				71BB72D32C9A403300138B14 /* ContentView.swift in Sources */,
+				717074872C9B1D8E00775317 /* LanguageManager.swift in Sources */,
 				71BB72DD2C9A403600138B14 /* mon2engdict.xcdatamodeld in Sources */,
 				71BB72D12C9A403300138B14 /* mon2engdictApp.swift in Sources */,
 			);
@@ -178,12 +205,13 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		71BB72EC2C9A44B700138B14 /* MonLocalization.strings */ = {
+		71BB72EC2C9A44B700138B14 /* Localizable.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
 				71BB72EB2C9A44B700138B14 /* my-MM */,
+				717074832C9B110600775317 /* en */,
 			);
-			name = MonLocalization.strings;
+			name = Localizable.strings;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -316,6 +344,7 @@
 				DEVELOPMENT_TEAM = 86SZC8RRQ7;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = mon2engdict/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -346,6 +375,7 @@
 				DEVELOPMENT_TEAM = 86SZC8RRQ7;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = mon2engdict/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
