@@ -7,14 +7,13 @@
 
 import Foundation
 
+
+///Language Manager
 class LanguageManager {
     static let shared = LanguageManager()
 
     func setLanguage(languageCode: String) {
-        UserDefaults.standard.set([languageCode], forKey: "AppleLanguages")
-        UserDefaults.standard.synchronize()
-        
-        // Post notification to reload the app’s UI
+        Bundle.setLanguage(languageCode)
         NotificationCenter.default.post(name: NSNotification.Name("LanguageChanged"), object: nil)
     }
 

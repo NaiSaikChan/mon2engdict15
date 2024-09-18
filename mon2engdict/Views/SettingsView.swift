@@ -11,25 +11,29 @@ struct SettingsView: View {
     @AppStorage("isDarkMode") private var isDarkMode = false
     @AppStorage("appLanguage") private var appLanguage = "en"
     
+    @ObservedObject var languageViewModel: LanguageViewModel
+    
     var body: some View {
         Form {
+            ///Dark mode button
             Section(header: Text(NSLocalizedString("Appearance", comment: "Appearance section header"))) {
                 Toggle(isOn: $isDarkMode) {
                     Text(NSLocalizedString("Dark Mode", comment: "Switch to enable Dark Mode"))
                 }
             }
+            ///Language switch
             Section(header: Text(NSLocalizedString("Language", comment: "Language section header"))) {
-                Picker(NSLocalizedString("App Language", comment: "Label for language picker"), selection: $appLanguage) {
+                Picker(NSLocalizedString("App Language", comment: "Language Picker label"), selection: $appLanguage) {
                     Text(NSLocalizedString("English", comment: "English language")).tag("en")
                     Text(NSLocalizedString("Mon", comment: "Mon language")).tag("my-MM")
                 }
                 .pickerStyle(SegmentedPickerStyle())
                 .onChange(of: appLanguage) { newValue in
-                                    LanguageManager.shared.setLanguage(languageCode: newValue)
-                                    // Optional: Trigger a UI refresh immediately
-                                    exit(0) // This restarts the app to apply the language change
-                                }
+                    languageViewModel.setLanguage(languageCode: newValue)
+                }
             }
+            
+            ///About app
             Section(header: Text(NSLocalizedString("About", comment: "About"))) {
                 Text("Fruit and Vegetable App")
             }
@@ -41,8 +45,8 @@ struct SettingsView: View {
     }
 }
 
-struct SettingsView_Previews: PreviewProvider {
-    static var previews: some View {
-        SettingsView()
-    }
-}
+//struct SettingsView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        SettingsView(languageViewModel: languageViewModel)
+//    }
+//}

@@ -22,6 +22,9 @@ struct mon2engdictApp: App {
                         currentLanguage = LanguageManager.shared.currentLanguage()
                     }
                 }
+                .onReceive(NotificationCenter.default.publisher(for: NSNotification.Name("LanguageChanged"))) { _ in
+                    currentLanguage = LanguageManager.shared.currentLanguage()
+                }
         }
     }
 }

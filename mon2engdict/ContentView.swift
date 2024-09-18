@@ -10,12 +10,17 @@ import CoreData
 
 struct ContentView: View {
     @Environment(\.managedObjectContext) private var viewContext
-
+    
+    
     @FetchRequest(
         sortDescriptors: [NSSortDescriptor(keyPath: \Item.timestamp, ascending: true)],
         animation: .default)
     private var items: FetchedResults<Item>
-
+    
+    //@State private var currentLanguage = LanguageManager.shared.currentLanguage()
+    @StateObject var languageViewModel = LanguageViewModel()
+    
+    
     var body: some View {
         TabView {
             NavigationView {
@@ -45,19 +50,22 @@ struct ContentView: View {
                 Label(NSLocalizedString("Time", comment: "time show"), systemImage: "leaf")
             }
             
-            
-            SettingsView()
+            SettingsView(languageViewModel: languageViewModel)
                 .tabItem{
                     Label(NSLocalizedString("Setting", comment: "setting"), systemImage: "gearshape")
                 }
         }
+        .environmentObject(languageViewModel)
+        .onReceive(NotificationCenter.default.publisher(for: NSNotification.Name("LanguageChanged"))) { _ in
+            languageViewModel.currentLanguage = LanguageManager.shared.currentLanguage()
+                }
     }
-
+    
     private func addItem() {
         withAnimation {
             let newItem = Item(context: viewContext)
             newItem.timestamp = Date()
-
+            
             do {
                 try viewContext.save()
             } catch {
@@ -68,11 +76,11 @@ struct ContentView: View {
             }
         }
     }
-
+    
     private func deleteItems(offsets: IndexSet) {
         withAnimation {
             offsets.map { items[$0] }.forEach(viewContext.delete)
-
+            
             do {
                 try viewContext.save()
             } catch {
