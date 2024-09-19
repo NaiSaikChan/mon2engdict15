@@ -11,7 +11,7 @@ import CoreData
 struct ContentView: View {
     @Environment(\.managedObjectContext) private var viewContext
     
-    
+    ///Fatch Request for all dic word
     @FetchRequest(
         sortDescriptors: [NSSortDescriptor(keyPath: \Item.timestamp, ascending: true)],
         animation: .default)
@@ -41,18 +41,35 @@ struct ContentView: View {
                     ToolbarItem {
                         Button(action: addItem) {
                             Label(NSLocalizedString("Add Item", comment: "Add Item"), systemImage: "plus")
+                                .font(.custom("Pyidaungsu", size: 14))
                         }
                     }
                 }
                 Text(NSLocalizedString(("Select an item"), comment: "Select item"))
+                    .font(.custom("Pyidaungsu", size: 14))
             }
             .tabItem{
                 Label(NSLocalizedString("Time", comment: "time show"), systemImage: "leaf")
+                    .font(.custom("Pyidaungsu", size: 14))
             }
+            
+            DictionaryView()
+                .tabItem{
+                    Label(NSLocalizedString("Dictionary", comment: "To view dictionay."), systemImage: "book")
+                        .font(.custom("Pyidaungsu", size: 14))
+                }
+            
+            FavoritesView()
+                .tabItem{
+                    Label(NSLocalizedString("Favorite", comment: "To view the saved favorite word."), systemImage: "heart.fill")
+                        .font(.custom("Pyidaungsu", size: 14))
+                }
+            
             
             SettingsView(languageViewModel: languageViewModel)
                 .tabItem{
                     Label(NSLocalizedString("Setting", comment: "setting"), systemImage: "gearshape")
+                        .font(.custom("Pyidaungsu", size: 14))
                 }
         }
         .environmentObject(languageViewModel)

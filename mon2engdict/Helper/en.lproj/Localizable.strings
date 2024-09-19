@@ -6,6 +6,7 @@
   
 */
 
+/* SettingsView */
 "Edit" = "Edit";
 "Appearance" = "Appearance";
 "Dark Mode" = "Dark Mode";
@@ -17,4 +18,21 @@
 "Add Item" = "Add Item";
 "Select an item" = "Select an item";
 "Time" = "Time";
+
+/* ContentView */
 "Setting" = "Setting";
+"Dictionary" = "Dictionary";
+"Favorite" = "Favorite";
+
+/* DictionaryView */
+"MEM Dictionary" = "MEM Dictionary";
+"Search word" = "Search word";
+
+/* DetailView */
+"Detail" = "Detail";
+"Remove from favorites" = "Remove from favorites";
+"Add to favorites" = "Add to favorites";
+"Pronounce in English" = "Pronounce in English";
+
+/* FavoritesView */
+"Favirotes Word" = "Favirotes Word";

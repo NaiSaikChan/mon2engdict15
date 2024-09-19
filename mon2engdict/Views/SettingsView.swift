@@ -21,6 +21,8 @@ struct SettingsView: View {
                     Text(NSLocalizedString("Dark Mode", comment: "Switch to enable Dark Mode"))
                 }
             }
+            .font(.custom("Pyidaungsu", size: 14))
+            
             ///Language switch
             Section(header: Text(NSLocalizedString("Language", comment: "Language section header"))) {
                 Picker(NSLocalizedString("App Language", comment: "Language Picker label"), selection: $appLanguage) {
@@ -31,12 +33,12 @@ struct SettingsView: View {
                 .onChange(of: appLanguage) { newValue in
                     languageViewModel.setLanguage(languageCode: newValue)
                 }
-            }
+            }.font(.custom("Pyidaungsu", size: 14))
             
             ///About app
             Section(header: Text(NSLocalizedString("About", comment: "About"))) {
                 Text("Fruit and Vegetable App")
-            }
+            }.font(.custom("Pyidaungsu", size: 14))
         }
         .onChange(of: isDarkMode) { _ in
             // Change theme logic

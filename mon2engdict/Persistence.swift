@@ -53,4 +53,18 @@ struct PersistenceController {
             }
         })
     }
+    
+    //// Save function to commit changes in the context
+    func saveContext() {
+        let context = container.viewContext
+        if context.hasChanges {
+            do {
+                try context.save()
+            } catch {
+                // Handle the error appropriately in a real app
+                let nsError = error as NSError
+                fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
+            }
+        }
+    }
 }

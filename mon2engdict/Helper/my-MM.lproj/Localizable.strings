@@ -6,8 +6,9 @@
   
 */
 
+/* SettingsView */
 "Edit" = "ပဠေဝ်";
-"Appearance" = "ထမံက်";
+"Appearance" = "ပြာကတ်";
 "Dark Mode" = "ဂၠု";
 "Language" = "ဘာသာ";
 "App Language" = "ဘာသာအေပ်";
@@ -17,4 +18,21 @@
 "Add Item" = "ထပ်စုတ်";
 "Select an item" = "ရုဲကေတ်";
 "Time" = "အခိၚ်";
+
+/* ContentView */
 "Setting" = "တၚ်ချိၚ်";
+"Dictionary" = "အဘိဓါန်";
+"Favorite" = "ဝေါဟာဒးကၞပ်";
+
+/* DictionaryView */
+"MEM Dictionary" = "အဘိဓါန် အၚ်္ဂလိက် <> မန်";
+"Search word" = "ဂၠာဲဝေါဟာ";
+
+/* DetailView */
+"Detail" = "ဗွဲတရး ဝေါဟာ";
+"Remove from favorites" = "ဇိုတ်ပ္တိတ်နူ ဝေါဟာဒးကၞပ်စိုတ်";
+"Add to favorites" = "ထပ်စုတ် ဝေါဟာဒးကၞပ်စိုတ်";
+"Pronounce in English" = "ပ္တိတ်ဗှ်ရမျာၚ် အၚ်္ဂလိက်";
+
+/* FavoritesView */
+"Favirotes Word" = "ဝေါဟာဒးကၞပ်စိုတ်ဂမၠိုၚ်";
