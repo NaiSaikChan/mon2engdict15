@@ -18,6 +18,8 @@
 "Add Item" = "Add Item";
 "Select an item" = "Select an item";
 "Time" = "Time";
+"Settings" = "Settings";
+"Mon English Dictionary" = "Mon English Dictionary";
 
 /* ContentView */
 "Setting" = "Setting";
@@ -36,3 +38,14 @@
 
 /* FavoritesView */
 "Favirotes Word" = "Favirotes Word";
+"Favirotes" = "Favirotes";
+
+
+/* AddWordView */
+"New Word" = "New Word";
+"English or Mon" = "English or Mon";
+"Definition" = "Definition";
+"Your personal saved words in the dictionary will be lost after deleting the app." = "Your personal saved words in the dictionary will be lost after deleting the app.";
+"Add Word" = "Add Word";
+"Cancel" = "Cancel";
+"Save" = "Save";

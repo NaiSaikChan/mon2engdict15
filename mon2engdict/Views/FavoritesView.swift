@@ -33,9 +33,14 @@ struct FavoritesView: View {
                     .padding(.vertical, 5)
                 }
             }
-            .navigationTitle(NSLocalizedString("Favirotes Word", comment: "The word favirotes word."))
-            .font(.custom("Pyidaungsu", size: 14))
+            //.navigationTitle(NSLocalizedString("Favirotes Word", comment: "The word favirotes word."))
             .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .principal) {
+                    Text((NSLocalizedString("Favirotes", comment: "the dictionary favirotes word.")))
+                        .font(.custom("Pyidaungsu", size:16))
+                }
+            }
         }
     }
 }

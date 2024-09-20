@@ -16,6 +16,7 @@ struct DetailView: View {
     public var synthesizer = AVSpeechSynthesizer()
     
     var body: some View {
+        
         VStack(alignment: .leading) {
             HStack {
                 Text(dict.word ?? "")
@@ -29,12 +30,12 @@ struct DetailView: View {
                         .foregroundColor(dict.isFavorite ? .yellow : .gray)
                 }
                 .accessibilityLabel(dict.isFavorite ? NSLocalizedString("Remove from favorites", comment: "For remove the favorites word.") : NSLocalizedString("Add to favorites", comment: "For add the favoites word."))
-                .font(.custom("Pyidaungsu", size: 14))
+                .font(.custom("Pyidaungsu", size: 16))
             }
             
-                Text(dict.def ?? "")
-                    .font(.custom("Pyidaungsu", size: 18))
-                    .foregroundColor(.secondary)
+            Text(dict.def ?? "")
+                .font(.custom("Pyidaungsu", size: 18))
+                .foregroundColor(.secondary)
             
             Button (action: {
                 pronounceWord(dict.word ?? "", language: "en-US")
@@ -42,7 +43,7 @@ struct DetailView: View {
                 HStack {
                     Image(systemName: "speaker.wave.2.fill")
                     Text(NSLocalizedString("Pronounce in English", comment: "To pronunce in only English."))
-                        .font(.custom("Pyidaungsu", size: 14))
+                        .font(.custom("Pyidaungsu", size: 16))
                 }
                 .padding()
                 .foregroundColor(.white)
@@ -54,7 +55,12 @@ struct DetailView: View {
         .padding()
         .navigationTitle(NSLocalizedString("Detail", comment: "the dictionary word detail."))
         .navigationBarTitleDisplayMode(.inline)
-        .font(.custom("Pyidaungsu", size: 14))
+        .toolbar {
+            ToolbarItem(placement: .principal) {
+                Text((NSLocalizedString("Detail", comment: "the dictionary word detail.")))
+                    .font(.custom("Pyidaungsu", size:16))
+            }
+        }
     }
     
     ///Functions

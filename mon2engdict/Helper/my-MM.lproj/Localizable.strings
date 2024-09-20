@@ -18,11 +18,13 @@
 "Add Item" = "ထပ်စုတ်";
 "Select an item" = "ရုဲကေတ်";
 "Time" = "အခိၚ်";
+"Settings" = "ဒၞာဲချိၚ်";
+"Mon English Dictionary" = "အဘိဓါန်ဝွံ ကံက်နုက်ပ္တိတ်နၚ် နူလိက်အုပ်အဘိဓါန် နာဲထောန်ဝဵုမဒှ်ရ။ နာဲအံၚ်ဉာဏ်လေန် ပ္ကောံပ္ကောဝ်ကၠုၚ်တၚ်နၚ်တုဲ အဲနာဲသိုက်ဆာန်ဏံကၠောန်ဗဒှ် App သွက် iOS မဒှ်ရ။";
 
 /* ContentView */
-"Setting" = "တၚ်ချိၚ်";
+"Setting" = "ဒၞာဲချိၚ်";
 "Dictionary" = "အဘိဓါန်";
-"Favorite" = "ဝေါဟာဒးကၞပ်";
+"Favorite" = "ဝေါဟာဒးဂၞပ်";
 
 /* DictionaryView */
 "MEM Dictionary" = "အဘိဓါန် အၚ်္ဂလိက် <> မန်";
@@ -35,4 +37,14 @@
 "Pronounce in English" = "ပ္တိတ်ဗှ်ရမျာၚ် အၚ်္ဂလိက်";
 
 /* FavoritesView */
-"Favirotes Word" = "ဝေါဟာဒးကၞပ်စိုတ်ဂမၠိုၚ်";
+"Favirotes Word" = "ဝေါဟာဒးဂၞပ်";
+"Favirotes" = "ဝေါဟာဒးဂၞပ်ဂမၠိုၚ်";
+
+/* AddWordView */
+"New Word" = "ဝေါဟာတၟိ";
+"English or Mon" = "အၚ်္ဂလိက်/မန်";
+"Definition" = "အဓိပ္ပါယ်";
+"Your personal saved words in the dictionary will be lost after deleting the app." = "ဝေါဟာနာဲထပ်စုတ်စကေတ်တအ်ဏံဝွံ အခါရနာဲဇိုတ်ပ္တိတ် App ဏံနူဖုၚ်မ္ဂး ကၠေံအာအိုတ်ရောၚ်။";
+"Add Word" = "ထပ်စုတ်ဝေါဟာ";
+"Cancel" = "တးပါဲ";
+"Save" = "ဂိုၚ်ဒိပ်";

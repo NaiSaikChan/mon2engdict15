@@ -66,7 +66,6 @@
 			isa = PBXGroup;
 			children = (
 				717074842C9B11F000775317 /* SettingsView.swift */,
-				7170748A2C9B330100775317 /* LanguageViewModel.swift */,
 				71536D202C9B8C79005272DA /* DictionaryView.swift */,
 				716A0F912C9C630300537B25 /* FavoritesView.swift */,
 				716A0F932C9C671100537B25 /* DetailView.swift */,
@@ -80,6 +79,7 @@
 				71BB72DB2C9A403600138B14 /* mon2engdict.xcdatamodeld */,
 				71BB72ED2C9A461A00138B14 /* mondict.json */,
 				717074862C9B1D8E00775317 /* LanguageManager.swift */,
+				7170748A2C9B330100775317 /* LanguageViewModel.swift */,
 				717074882C9B30D800775317 /* Bundle+Extensions.swift */,
 				716A0F952C9C7E5F00537B25 /* DataLoader.swift */,
 			);
