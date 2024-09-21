@@ -20,6 +20,12 @@
 "Time" = "Time";
 "Settings" = "Settings";
 "Mon English Dictionary" = "Mon English Dictionary";
+"Font Size" = "Font Size";
+"Current Size" = "Current Size";
+"Light" = "Light";
+"Dark" = "Dark";
+"System" = "System";
+"About App" = "Credit to Nai Aung Nyan Lynn who delevop and digitalize the main data source of this English to Mon Dictionary from Nai Tun Wai's dictionary book and others. iOS App Developer Nai Saik Chan.";
 
 /* ContentView */
 "Setting" = "Setting";
@@ -45,7 +51,7 @@
 "New Word" = "New Word";
 "English or Mon" = "English or Mon";
 "Definition" = "Definition";
-"Your personal saved words in the dictionary will be lost after deleting the app." = "Your personal saved words in the dictionary will be lost after deleting the app.";
+"Own add Word" = "Your personal saved words in the dictionary will be lost after deleting the app.";
 "Add Word" = "Add Word";
 "Cancel" = "Cancel";
 "Save" = "Save";

@@ -15,6 +15,7 @@ struct DictionaryView: View {
     @State private var showingAddWord = false
     @StateObject var languageViewModel = LanguageViewModel()
     
+    @Environment(\.fontSize) var fontSize
     @Environment(\.managedObjectContext) private var viewContext
     @Environment(\.horizontalSizeClass) private var horizonalSize
     @Environment(\.verticalSizeClass) private var verticalSize
@@ -25,10 +26,10 @@ struct DictionaryView: View {
                 NavigationLink(destination: DetailView(dict: item)) {
                     VStack(alignment: .leading, spacing: 2) {
                         Text(highlightText(for: item.word ?? ""))
-                            .font(.custom("Pyidaungsu", size: 20))
+                            .font(.custom("Pyidaungsu", size: fontSize+4))
                             .bold()
                         Text(highlightText(for: item.def ?? ""))
-                            .font(.custom("Pyidaungsu", size: 16))
+                            .font(.custom("Pyidaungsu", size: fontSize))
                             .foregroundColor(.secondary)
                             .lineLimit(3)
                     }
@@ -60,7 +61,7 @@ struct DictionaryView: View {
                         Label(NSLocalizedString("Add Word", comment: "add word button"), systemImage: "plus.app.fill")
                     }
                 }
-            }.font(.custom("Pyidaungsu", size:18))
+            }.font(.custom("Pyidaungsu", size:fontSize+4))
             .sheet(isPresented: $showingAddWord) {
                 AddWordView()
             }
@@ -88,7 +89,7 @@ struct DictionaryView: View {
             do {
                 let results = try viewContext.fetch(fetchRequest)
                 
-                // Update the UI on the main thread
+                /// Update the UI on the main thread
                 DispatchQueue.main.async {
                     self.words = results
                     self.isLoading = false
@@ -120,6 +121,7 @@ struct DictionaryView: View {
 struct AddWordView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @Environment(\.dismiss) var dismiss
+    @Environment(\.fontSize) var fontSize
     @StateObject var languageViewModel = LanguageViewModel()
     
     @State private var wordAdd = ""
@@ -130,7 +132,7 @@ struct AddWordView: View {
             Form {
                 Section(header: Text(NSLocalizedString("Add Word", comment: "Title of the new word"))) {
                     TextField(NSLocalizedString("English or Mon", comment: "add word"), text: $wordAdd)
-                        .font(.custom("Pyidaungsu", size: 16))
+                        .font(.custom("Pyidaungsu", size: fontSize))
                         .textFieldStyle(RoundedBorderTextFieldStyle()) // Optional: Adds a border for visual consistency
                     
                     // Multiline input for Mon text
@@ -144,9 +146,9 @@ struct AddWordView: View {
                                 RoundedRectangle(cornerRadius: 8)
                                     .stroke(Color.secondary, lineWidth: 0.5) // Adds a border
                             )
-                            .font(.custom("Pyidaungsu", size: 16))
-                        Text(NSLocalizedString("Your personal saved words in the dictionary will be lost after deleting the app.", comment: "notice for add new own word."))
-                            .font(.footnote)
+                            .font(.custom("Pyidaungsu", size: fontSize))
+                        Text(NSLocalizedString("Own add Word", comment: "notice for add new own word."))
+                            .font(.custom("Pyidaungsu", size: fontSize))
                             .foregroundColor(.secondary)
                     }
                 }
@@ -167,7 +169,7 @@ struct AddWordView: View {
                     }
                     .disabled(wordAdd.isEmpty || defAdd.isEmpty) // Disable save if fields are empty
                 }
-            }.font(.custom("Pyidaungsu", size: 16))
+            }.font(.custom("Pyidaungsu", size: fontSize))
         }
     }
     

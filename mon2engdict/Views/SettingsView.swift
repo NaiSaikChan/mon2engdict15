@@ -20,64 +20,63 @@ struct SettingsView: View {
     }
     
     var body: some View {
-        NavigationView {
-            Form {
-                ///Dark mode button
-                Section(header: Text(NSLocalizedString("Appearance", comment: "Appearance section header"))) {
-                    Picker("Theme", selection: $themeMode) {
-                        ForEach(ThemeMode.allCases, id: \.self) { mode in
-                            Text(mode.displayName).tag(mode)
-                        }
+        
+        Form {
+            ///Dark mode button
+            Section(header: Text(NSLocalizedString("Appearance", comment: "Appearance section header"))) {
+                Picker("Theme", selection: $themeMode) {
+                    ForEach(ThemeMode.allCases, id: \.self) { mode in
+                        Text(mode.displayName).tag(mode).font(.custom("Pyidaungsu", size: fontSize))
                     }
-                    .pickerStyle(SegmentedPickerStyle())
-                    
-                    //                Toggle(isOn: $isDarkMode) {
-                    //                    Text(NSLocalizedString("Dark Mode", comment: "Switch to enable Dark Mode"))
-                    //                }
                 }
-                .font(.custom("Pyidaungsu", size: 16))
-                
-                // Font Size Section
-                Section(header: Text("Font Size")) {
-                    Slider(value: $fontSizeDouble, in: 14...26, step: 1) {
-                        Text("Font Size")
-                    }
-                    Text("Current Size: \(Int(fontSize))")
-                }
-                
-                ///Language switch
-                Section(header: Text(NSLocalizedString("Language", comment: "Language section header"))) {
-                    Picker(NSLocalizedString("App Language", comment: "Language Picker label"), selection: $appLanguage) {
-                        Text(NSLocalizedString("English", comment: "English language")).tag("en")
-                        Text(NSLocalizedString("Mon", comment: "Mon language")).tag("my-MM")
-                    }
-                    .pickerStyle(SegmentedPickerStyle())
-                    .onChange(of: appLanguage) { newValue in
-                        languageViewModel.setLanguage(languageCode: newValue)
-                    }
-                }.font(.custom("Pyidaungsu", size: 16))
-                
-                ///About app
-                Section(header: Text(NSLocalizedString("About", comment: "About"))) {
-                    Text(NSLocalizedString("Mon English Dictionary", comment: "About the App"))
-                }.font(.custom("Pyidaungsu", size: 16))
+                .pickerStyle(SegmentedPickerStyle())
             }
-            //        .onChange(of: isDarkMode) { _ in
-            //            // Change theme logic
-            //            //UIApplication.shared.windows.first?.overrideUserInterfaceStyle = isDarkMode ? .dark : .light
-            //            applyTheme()
-            //        }
-            .onAppear {
-                applyTheme()
-            }
-            .toolbar{
-                ToolbarItem(placement: .principal) {
-                    Text(NSLocalizedString("Settings", comment: "setting title"))
-                        .font(.custom("Pyidaungsu", size: 16))
+            .font(.custom("Pyidaungsu", size: fontSize))
+            
+            /// Font Size Section
+            Section(header: Text(NSLocalizedString("Font Size", comment: "fon size header"))) {
+                Slider(value: $fontSizeDouble, in: 14...26, step: 1) {
+                    Text(NSLocalizedString("Font Size", comment: "fon size header"))
+                        .font(.custom("Pyidaungsu", size: fontSize))
                 }
+                Text(NSLocalizedString("Current Size", comment: "change the font size")+": \(Int(fontSize))")
+                    .font(.custom("Pyidaungsu", size: fontSize))
+            }.font(.custom("Pyidaungsu", size: fontSize))
+            
+            ///Language switch
+            Section(header: Text(NSLocalizedString("Language", comment: "Language section header"))) {
+                Picker(NSLocalizedString("App Language", comment: "Language Picker label"), selection: $appLanguage) {
+                    Text(NSLocalizedString("English", comment: "English language")).tag("en")
+                        .font(.custom("Pyidaungsu", size: fontSize))
+                    Text(NSLocalizedString("Mon", comment: "Mon language")).tag("my-MM")
+                        .font(.custom("Pyidaungsu", size: fontSize))
+                }
+                .pickerStyle(SegmentedPickerStyle())
+                .onChange(of: appLanguage) { newValue in
+                    languageViewModel.setLanguage(languageCode: newValue)
+                }
+            }.font(.custom("Pyidaungsu", size: fontSize))
+            
+            ///About app
+            Section(header: Text(NSLocalizedString("About", comment: "About"))) {
+                Text(NSLocalizedString("About App", comment: "About the App"))
+            }.font(.custom("Pyidaungsu", size: fontSize))
+        }
+        .onChange(of: themeMode) { _ in
+            applyTheme()
+        }
+        .onAppear {
+            applyTheme()
+        }
+        .environment(\.fontSize, fontSize)
+        .toolbar{
+            ToolbarItem(placement: .principal) {
+                Text(NSLocalizedString("Settings", comment: "setting title"))
+                    .font(.custom("Pyidaungsu", size: fontSize))
             }
         }
     }
+    
     
     private func applyTheme() {
         guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene else { return }
@@ -94,7 +93,18 @@ struct SettingsView: View {
     }
 }
 
-// Enum for Theme Modes
+struct FontSizeKey: EnvironmentKey {
+    static let defaultValue: CGFloat = 16 // Default font size
+}
+
+extension EnvironmentValues {
+    var fontSize: CGFloat {
+        get { self[FontSizeKey.self] }
+        set { self[FontSizeKey.self] = newValue }
+    }
+}
+
+/// Enum for Theme Modes
 enum ThemeMode: String, CaseIterable {
     case light
     case dark
@@ -102,9 +112,9 @@ enum ThemeMode: String, CaseIterable {
     
     var displayName: String {
         switch self {
-        case .light: return "Light"
-        case .dark: return "Dark"
-        case .system: return "System"
+        case .light: return NSLocalizedString("Light", comment: "light mode")
+        case .dark: return NSLocalizedString("Dark", comment: "dark mode")
+        case .system: return NSLocalizedString("System", comment: "system auto mode")
         }
     }
 }
