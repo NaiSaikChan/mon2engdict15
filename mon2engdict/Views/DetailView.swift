@@ -17,49 +17,51 @@ struct DetailView: View {
     public var synthesizer = AVSpeechSynthesizer()
     
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading) {
-                HStack {
-                    Text(dict.word ?? "")
-                        .font(.custom("Pyidaungsu", size: fontSize+8))
-                        .bold()
-                    Spacer()
-                    Button(action: {
-                        toggleFavorite()
-                    }) {
-                        Image(systemName: dict.isFavorite ? "heart.fill" : "heart")
-                            .foregroundColor(dict.isFavorite ? .yellow : .gray)
-                    }
-                    .accessibilityLabel(dict.isFavorite ? NSLocalizedString("Remove from favorites", comment: "For remove the favorites word.") : NSLocalizedString("Add to favorites", comment: "For add the favoites word."))
-                    .font(.custom("Pyidaungsu", size: fontSize))
-                }
-                
-                Text(dict.def ?? "")
-                    .font(.custom("Pyidaungsu", size: fontSize+2))
-                    .foregroundColor(.secondary)
-                
-                Button (action: {
-                    pronounceWord(dict.word ?? "", language: "en-US")
-                }) {
+        NavigationView {
+            ScrollView {
+                VStack(alignment: .leading) {
                     HStack {
-                        Image(systemName: "speaker.wave.2.fill")
-                        Text(NSLocalizedString("Pronounce in English", comment: "To pronunce in only English."))
-                            .font(.custom("Pyidaungsu", size: fontSize))
+                        Text(dict.word ?? "")
+                            .font(.custom("Pyidaungsu", size: fontSize+8))
+                            .bold()
+                        Spacer()
+                        Button(action: {
+                            toggleFavorite()
+                        }) {
+                            Image(systemName: dict.isFavorite ? "heart.fill" : "heart")
+                                .foregroundColor(dict.isFavorite ? .yellow : .gray)
+                        }
+                        .accessibilityLabel(dict.isFavorite ? NSLocalizedString("Remove from favorites", comment: "For remove the favorites word.") : NSLocalizedString("Add to favorites", comment: "For add the favoites word."))
+                        .font(.custom("Pyidaungsu", size: fontSize))
                     }
-                    .padding()
-                    .foregroundColor(.white)
-                    .background(Color.blue)
-                    .cornerRadius(8)
+                    
+                    Text(dict.def ?? "")
+                        .font(.custom("Pyidaungsu", size: fontSize+2))
+                        .foregroundColor(.secondary)
+                    
+                    Button (action: {
+                        pronounceWord(dict.word ?? "", language: "en-US")
+                    }) {
+                        HStack {
+                            Image(systemName: "speaker.wave.2.fill")
+                            Text(NSLocalizedString("Pronounce in English", comment: "To pronunce in only English."))
+                                .font(.custom("Pyidaungsu", size: fontSize))
+                        }
+                        .padding()
+                        .foregroundColor(.white)
+                        .background(Color.blue)
+                        .cornerRadius(8)
+                    }
+                    Spacer()
                 }
-                Spacer()
-            }
-            .padding()
-            .navigationTitle(NSLocalizedString("Detail", comment: "the dictionary word detail."))
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .principal) {
-                    Text((NSLocalizedString("Detail", comment: "the dictionary word detail.")))
-                        .font(.custom("Pyidaungsu", size:fontSize))
+                .padding()
+                .navigationTitle(NSLocalizedString("Detail", comment: "the dictionary word detail."))
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbar {
+                    ToolbarItem(placement: .principal) {
+                        Text((NSLocalizedString("Detail", comment: "the dictionary word detail.")))
+                            .font(.custom("Pyidaungsu", size:fontSize))
+                    }
                 }
             }
         }

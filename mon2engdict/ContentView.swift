@@ -15,7 +15,6 @@ struct ContentView: View {
     
     
     var body: some View {
-        NavigationView {
             TabView {
                 DictionaryView()
                     .tabItem{
@@ -49,7 +48,6 @@ struct ContentView: View {
             .onReceive(NotificationCenter.default.publisher(for: NSNotification.Name("LanguageChanged"))) { _ in
                 languageViewModel.currentLanguage = LanguageManager.shared.currentLanguage()
             }
-        }.navigationViewStyle(StackNavigationViewStyle())
     }
 }
 

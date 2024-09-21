@@ -20,59 +20,60 @@ struct SettingsView: View {
     }
     
     var body: some View {
-        
-        Form {
-            ///Dark mode button
-            Section(header: Text(NSLocalizedString("Appearance", comment: "Appearance section header"))) {
-                Picker("Theme", selection: $themeMode) {
-                    ForEach(ThemeMode.allCases, id: \.self) { mode in
-                        Text(mode.displayName).tag(mode).font(.custom("Pyidaungsu", size: fontSize))
+        NavigationView {
+            Form {
+                ///Dark mode button
+                Section(header: Text(NSLocalizedString("Appearance", comment: "Appearance section header"))) {
+                    Picker("Theme", selection: $themeMode) {
+                        ForEach(ThemeMode.allCases, id: \.self) { mode in
+                            Text(mode.displayName).tag(mode).font(.custom("Pyidaungsu", size: fontSize))
+                        }
                     }
+                    .pickerStyle(SegmentedPickerStyle())
                 }
-                .pickerStyle(SegmentedPickerStyle())
+                .font(.custom("Pyidaungsu", size: fontSize))
+                
+                /// Font Size Section
+                Section(header: Text(NSLocalizedString("Font Size", comment: "fon size header"))) {
+                    Slider(value: $fontSizeDouble, in: 14...26, step: 1) {
+                        Text(NSLocalizedString("Font Size", comment: "fon size header"))
+                            .font(.custom("Pyidaungsu", size: fontSize))
+                    }
+                    Text(NSLocalizedString("Current Size", comment: "change the font size")+": \(Int(fontSize))")
+                        .font(.custom("Pyidaungsu", size: fontSize))
+                }.font(.custom("Pyidaungsu", size: fontSize))
+                
+                ///Language switch
+                Section(header: Text(NSLocalizedString("Language", comment: "Language section header"))) {
+                    Picker(NSLocalizedString("App Language", comment: "Language Picker label"), selection: $appLanguage) {
+                        Text(NSLocalizedString("English", comment: "English language")).tag("en")
+                            .font(.custom("Pyidaungsu", size: fontSize))
+                        Text(NSLocalizedString("Mon", comment: "Mon language")).tag("my-MM")
+                            .font(.custom("Pyidaungsu", size: fontSize))
+                    }
+                    .pickerStyle(SegmentedPickerStyle())
+                    .onChange(of: appLanguage) { newValue in
+                        languageViewModel.setLanguage(languageCode: newValue)
+                    }
+                }.font(.custom("Pyidaungsu", size: fontSize))
+                
+                ///About app
+                Section(header: Text(NSLocalizedString("About", comment: "About"))) {
+                    Text(NSLocalizedString("About App", comment: "About the App"))
+                }.font(.custom("Pyidaungsu", size: fontSize))
             }
-            .font(.custom("Pyidaungsu", size: fontSize))
-            
-            /// Font Size Section
-            Section(header: Text(NSLocalizedString("Font Size", comment: "fon size header"))) {
-                Slider(value: $fontSizeDouble, in: 14...26, step: 1) {
-                    Text(NSLocalizedString("Font Size", comment: "fon size header"))
+            .onChange(of: themeMode) { _ in
+                applyTheme()
+            }
+            .onAppear {
+                applyTheme()
+            }
+            .environment(\.fontSize, fontSize)
+            .toolbar{
+                ToolbarItem(placement: .principal) {
+                    Text(NSLocalizedString("Settings", comment: "setting title"))
                         .font(.custom("Pyidaungsu", size: fontSize))
                 }
-                Text(NSLocalizedString("Current Size", comment: "change the font size")+": \(Int(fontSize))")
-                    .font(.custom("Pyidaungsu", size: fontSize))
-            }.font(.custom("Pyidaungsu", size: fontSize))
-            
-            ///Language switch
-            Section(header: Text(NSLocalizedString("Language", comment: "Language section header"))) {
-                Picker(NSLocalizedString("App Language", comment: "Language Picker label"), selection: $appLanguage) {
-                    Text(NSLocalizedString("English", comment: "English language")).tag("en")
-                        .font(.custom("Pyidaungsu", size: fontSize))
-                    Text(NSLocalizedString("Mon", comment: "Mon language")).tag("my-MM")
-                        .font(.custom("Pyidaungsu", size: fontSize))
-                }
-                .pickerStyle(SegmentedPickerStyle())
-                .onChange(of: appLanguage) { newValue in
-                    languageViewModel.setLanguage(languageCode: newValue)
-                }
-            }.font(.custom("Pyidaungsu", size: fontSize))
-            
-            ///About app
-            Section(header: Text(NSLocalizedString("About", comment: "About"))) {
-                Text(NSLocalizedString("About App", comment: "About the App"))
-            }.font(.custom("Pyidaungsu", size: fontSize))
-        }
-        .onChange(of: themeMode) { _ in
-            applyTheme()
-        }
-        .onAppear {
-            applyTheme()
-        }
-        .environment(\.fontSize, fontSize)
-        .toolbar{
-            ToolbarItem(placement: .principal) {
-                Text(NSLocalizedString("Settings", comment: "setting title"))
-                    .font(.custom("Pyidaungsu", size: fontSize))
             }
         }
     }
