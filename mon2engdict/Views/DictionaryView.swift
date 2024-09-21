@@ -11,7 +11,7 @@ import CoreData
 struct DictionaryView: View {
     @State private var searchText = ""
     @State private var words: [MonDic] = []
-    @State private var isLoading: Bool = false
+    @State private var isLoading: Bool = true
     @State private var showingAddWord = false
     @StateObject var languageViewModel = LanguageViewModel()
     
@@ -22,18 +22,29 @@ struct DictionaryView: View {
     
     var body: some View {
         NavigationView {
-            List(words, id: \.self) { item in
-                NavigationLink(destination: DetailView(dict: item)) {
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text(highlightText(for: item.word ?? ""))
-                            .font(.custom("Pyidaungsu", size: fontSize+4))
-                            .bold()
-                        Text(highlightText(for: item.def ?? ""))
-                            .font(.custom("Pyidaungsu", size: fontSize))
-                            .foregroundColor(.secondary)
-                            .lineLimit(3)
+            Group {
+                if isLoading {
+                    VStack {
+                        ProgressView("Loading...")
+                            .progressViewStyle(CircularProgressViewStyle())
+                            .padding()
+                            .foregroundColor(.gray)
                     }
-                    .padding(.vertical, 5)
+                } else {
+                    List(words, id: \.self) { item in
+                        NavigationLink(destination: DetailView(dict: item)) {
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text(highlightText(for: item.word ?? ""))
+                                    .font(.custom("Pyidaungsu", size: fontSize+4))
+                                    .bold()
+                                Text(highlightText(for: item.def ?? ""))
+                                    .font(.custom("Pyidaungsu", size: fontSize))
+                                    .foregroundColor(.secondary)
+                                    .lineLimit(3)
+                            }
+                            .padding(.vertical, 5)
+                        }
+                    }
                 }
             }
             .searchable(text: $searchText, placement: {
@@ -66,6 +77,7 @@ struct DictionaryView: View {
                 AddWordView()
             }
         }
+        .navigationViewStyle(StackNavigationViewStyle())
     }
     
     /// Fetch initial data when the view appears

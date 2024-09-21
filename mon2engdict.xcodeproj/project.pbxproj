@@ -26,6 +26,7 @@
 		71BB72EA2C9A44B700138B14 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 71BB72EC2C9A44B700138B14 /* Localizable.strings */; };
 		71BB72EE2C9A461A00138B14 /* mondict.json in Resources */ = {isa = PBXBuildFile; fileRef = 71BB72ED2C9A461A00138B14 /* mondict.json */; };
 		71E57BA62C9EB52500FE6AC7 /* AddWordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71E57BA52C9EB52500FE6AC7 /* AddWordView.swift */; };
+		71E57BAE2C9EE37F00FE6AC7 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 71E57BAD2C9EE37F00FE6AC7 /* Launch Screen.storyboard */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -51,6 +52,7 @@
 		71BB72EB2C9A44B700138B14 /* my-MM */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "my-MM"; path = "my-MM.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		71BB72ED2C9A461A00138B14 /* mondict.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = mondict.json; sourceTree = "<group>"; };
 		71E57BA52C9EB52500FE6AC7 /* AddWordView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddWordView.swift; sourceTree = "<group>"; };
+		71E57BAD2C9EE37F00FE6AC7 /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -108,6 +110,7 @@
 		71BB72CF2C9A403300138B14 /* mon2engdict */ = {
 			isa = PBXGroup;
 			children = (
+				71E57BAD2C9EE37F00FE6AC7 /* Launch Screen.storyboard */,
 				717074822C9B10B700775317 /* Info.plist */,
 				717074812C9B0CE200775317 /* DataModel */,
 				717074802C9B0CC400775317 /* Views */,
@@ -204,6 +207,7 @@
 				71BB72EA2C9A44B700138B14 /* Localizable.strings in Resources */,
 				71BB72EE2C9A461A00138B14 /* mondict.json in Resources */,
 				71BB72D52C9A403600138B14 /* Assets.xcassets in Resources */,
+				71E57BAE2C9EE37F00FE6AC7 /* Launch Screen.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -382,6 +386,7 @@
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = "Launch Screen.storyboard";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
@@ -413,6 +418,7 @@
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = "Launch Screen.storyboard";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;

@@ -20,7 +20,7 @@ struct SettingsView: View {
     }
     
     var body: some View {
-        NavigationView {
+        
             Form {
                 ///Dark mode button
                 Section(header: Text(NSLocalizedString("Appearance", comment: "Appearance section header"))) {
@@ -75,7 +75,7 @@ struct SettingsView: View {
                         .font(.custom("Pyidaungsu", size: fontSize))
                 }
             }
-        }
+        
     }
     
     

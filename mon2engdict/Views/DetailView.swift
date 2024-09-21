@@ -17,7 +17,7 @@ struct DetailView: View {
     public var synthesizer = AVSpeechSynthesizer()
     
     var body: some View {
-        NavigationView {
+        
             ScrollView {
                 VStack(alignment: .leading) {
                     HStack {
@@ -55,8 +55,7 @@ struct DetailView: View {
                     Spacer()
                 }
                 .padding()
-                .navigationTitle(NSLocalizedString("Detail", comment: "the dictionary word detail."))
-                .navigationBarTitleDisplayMode(.inline)
+                
                 .toolbar {
                     ToolbarItem(placement: .principal) {
                         Text((NSLocalizedString("Detail", comment: "the dictionary word detail.")))
@@ -64,7 +63,7 @@ struct DetailView: View {
                     }
                 }
             }
-        }
+        
     }
     
     ///Functions
