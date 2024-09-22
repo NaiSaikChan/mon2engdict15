@@ -7,13 +7,19 @@
 
 import SwiftUI
 import CoreData
+import GoogleMobileAds
 
 struct DictionaryView: View {
     @State private var searchText = ""
     @State private var words: [MonDic] = []
     @State private var isLoading: Bool = true
     @State private var showingAddWord = false
+    
+    @AppStorage("sortMode") private var sortMode: SortMode = .az
+    @AppStorage("fontSize") private var fontSizeDouble: Double = 16
+    
     @StateObject var languageViewModel = LanguageViewModel()
+    @StateObject var adManager = InterstitialAdManager()
     
     @Environment(\.fontSize) var fontSize
     @Environment(\.managedObjectContext) private var viewContext
@@ -31,14 +37,14 @@ struct DictionaryView: View {
                             .foregroundColor(.gray)
                     }
                 } else {
-                    List(words, id: \.self) { item in
+                    List(sortedWords, id: \.self) { item in
                         NavigationLink(destination: DetailView(dict: item)) {
                             VStack(alignment: .leading, spacing: 2) {
                                 Text(highlightText(for: item.word ?? ""))
-                                    .font(.custom("Pyidaungsu", size: fontSize+4))
+                                    .font(.custom("Pyidaungsu", size: fontSizeDouble+4))
                                     .bold()
                                 Text(highlightText(for: item.def ?? ""))
-                                    .font(.custom("Pyidaungsu", size: fontSize))
+                                    .font(.custom("Pyidaungsu", size: fontSizeDouble))
                                     .foregroundColor(.secondary)
                                     .lineLimit(3)
                             }
@@ -51,7 +57,7 @@ struct DictionaryView: View {
                 if horizonalSize == .compact && verticalSize == .regular {
                     return .navigationBarDrawer(displayMode: .always)
                 } else {
-                    return .navigationBarDrawer(displayMode: .automatic)
+                    return .navigationBarDrawer(displayMode: .always)
                 }
             }(), prompt: NSLocalizedString("Search word", comment: "for searching words"))
             .onChange(of: searchText) { newValue in
@@ -60,10 +66,20 @@ struct DictionaryView: View {
             .onAppear {
                 loadDataIfNeeded(context: viewContext)
                 fetchInitialData()
+                
+                // Show interstitial ad when data is loaded
+                if adManager.isAdReady {
+                    if let rootViewController = getRootViewController() {
+                        adManager.showAd(from: rootViewController)
+                    }
+                } else {
+                    print("Ad wasn't ready")
+                }
             }
             .toolbar {
                 ToolbarItem(placement: .principal) {
                     Text((NSLocalizedString("MEM Dictionary", comment: "the dictionary navigation title.")))
+                        .font(.custom("Pyidaungsu", size:fontSizeDouble))
                 }
                 ToolbarItem(placement: .primaryAction) {
                     Button(action: {
@@ -72,7 +88,7 @@ struct DictionaryView: View {
                         Label(NSLocalizedString("Add Word", comment: "add word button"), systemImage: "plus.app.fill")
                     }
                 }
-            }.font(.custom("Pyidaungsu", size:fontSize+4))
+            }
             .sheet(isPresented: $showingAddWord) {
                 AddWordView()
             }
@@ -80,9 +96,25 @@ struct DictionaryView: View {
         .navigationViewStyle(StackNavigationViewStyle())
     }
     
+    /// Apply sorting based on the user's setting
+    var sortedWords: [MonDic] {
+        switch sortMode {
+        case .az:
+            return words.sorted { ($0.word ?? "") < ($1.word ?? "") } // Sort A-Z by word property
+        case .za:
+            return words.sorted { ($0.word ?? "") > ($1.word ?? "") } // Sort Z-A by word property
+        case .random:
+            return words.shuffled() // Random order
+        }
+    }
+    
     /// Fetch initial data when the view appears
     private func fetchInitialData() {
-        fetchFilteredData(query: "")
+        isLoading = true
+        DispatchQueue.main.asyncAfter(deadline: .now()) {
+            fetchFilteredData(query: "")
+            isLoading = false
+        }
     }
     
     /// Fetch data asynchronously based on the search query
@@ -126,6 +158,17 @@ struct DictionaryView: View {
             attributedString[range].font = .bold(.body)()
         }
         return attributedString
+    }
+    
+    /// Helper function to get the root view controller in iOS 15+
+    func getRootViewController() -> UIViewController? {
+        guard let windowScene = UIApplication.shared
+            .connectedScenes
+            .first as? UIWindowScene else {
+            return nil
+        }
+        
+        return windowScene.windows.first?.rootViewController
     }
 }
 

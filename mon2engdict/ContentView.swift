@@ -7,12 +7,13 @@
 
 import SwiftUI
 import CoreData
+import GoogleMobileAds
 
 struct ContentView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @Environment(\.fontSize) var fontSize
     @StateObject var languageViewModel = LanguageViewModel()
-    
+    @AppStorage("fontSize") private var fontSizeDouble: Double = 16
     
     var body: some View {
         TabView {

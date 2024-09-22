@@ -11,6 +11,7 @@ import CoreData
 struct FavoritesView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @Environment(\.fontSize) var fontSize
+    @AppStorage("fontSize") private var fontSizeDouble: Double = 16
     
     ///Fatch Request for the favorite dic word
     @FetchRequest(
@@ -25,10 +26,10 @@ struct FavoritesView: View {
                 ForEach(dictionary) { item in
                     VStack(alignment: .leading) {
                         Text(item.word ?? "")
-                            .font(.custom("Pyidaungsu", size: fontSize+4))
+                            .font(.custom("Pyidaungsu", size: fontSizeDouble+4))
                             .bold()
                         Text(item.def ?? "")
-                            .font(.custom("Pyidaungsu", size: fontSize))
+                            .font(.custom("Pyidaungsu", size: fontSizeDouble))
                             .foregroundColor(.secondary)
                     }
                     .padding(.vertical, 5)
@@ -39,9 +40,10 @@ struct FavoritesView: View {
             .toolbar {
                 ToolbarItem(placement: .principal) {
                     Text((NSLocalizedString("Favirotes", comment: "the dictionary favirotes word.")))
-                        .font(.custom("Pyidaungsu", size:fontSize+4))
+                        .font(.custom("Pyidaungsu", size:fontSizeDouble))
                 }
             }
+            
         }.navigationViewStyle(StackNavigationViewStyle())
     }
 }

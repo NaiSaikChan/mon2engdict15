@@ -6,12 +6,17 @@
 //
 
 import SwiftUI
+import GoogleMobileAds
 
 @main
 struct mon2engdictApp: App {
     @State private var currentLanguage = LanguageManager.shared.currentLanguage()
     
     let persistenceController = PersistenceController.shared
+    
+    init() {
+        GADMobileAds.sharedInstance().start(completionHandler: nil)
+    }
     
     var body: some Scene {
         WindowGroup {

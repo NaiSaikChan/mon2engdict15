@@ -13,6 +13,7 @@ struct AddWordView: View {
     @Environment(\.dismiss) var dismiss
     @Environment(\.fontSize) var fontSize
     @StateObject var languageViewModel = LanguageViewModel()
+    @AppStorage("fontSize") private var fontSizeDouble: Double = 16
     
     @State private var wordAdd = ""
     @State private var defAdd = ""
@@ -22,7 +23,7 @@ struct AddWordView: View {
             Form {
                 Section(header: Text(NSLocalizedString("Add Word", comment: "Title of the new word"))) {
                     TextField(NSLocalizedString("English or Mon", comment: "add word"), text: $wordAdd)
-                        .font(.custom("Pyidaungsu", size: fontSize))
+                        .font(.custom("Pyidaungsu", size: fontSizeDouble))
                         .textFieldStyle(RoundedBorderTextFieldStyle()) // Optional: Adds a border for visual consistency
                     
                     // Multiline input for Mon text
@@ -36,9 +37,9 @@ struct AddWordView: View {
                                 RoundedRectangle(cornerRadius: 8)
                                     .stroke(Color.secondary, lineWidth: 0.5) // Adds a border
                             )
-                            .font(.custom("Pyidaungsu", size: fontSize))
+                            .font(.custom("Pyidaungsu", size: fontSizeDouble))
                         Text(NSLocalizedString("Own add Word", comment: "notice for add new own word."))
-                            .font(.custom("Pyidaungsu", size: fontSize))
+                            .font(.custom("Pyidaungsu", size: fontSizeDouble))
                             .foregroundColor(.secondary)
                     }
                 }
@@ -59,7 +60,7 @@ struct AddWordView: View {
                     }
                     .disabled(wordAdd.isEmpty || defAdd.isEmpty) // Disable save if fields are empty
                 }
-            }.font(.custom("Pyidaungsu", size: fontSize))
+            }.font(.custom("Pyidaungsu", size: fontSizeDouble))
         }
     }
     

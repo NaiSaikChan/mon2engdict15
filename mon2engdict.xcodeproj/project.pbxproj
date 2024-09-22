@@ -27,6 +27,8 @@
 		71BB72EE2C9A461A00138B14 /* mondict.json in Resources */ = {isa = PBXBuildFile; fileRef = 71BB72ED2C9A461A00138B14 /* mondict.json */; };
 		71E57BA62C9EB52500FE6AC7 /* AddWordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71E57BA52C9EB52500FE6AC7 /* AddWordView.swift */; };
 		71E57BAE2C9EE37F00FE6AC7 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 71E57BAD2C9EE37F00FE6AC7 /* Launch Screen.storyboard */; };
+		71E57BB12C9F0AEF00FE6AC7 /* GoogleMobileAds in Frameworks */ = {isa = PBXBuildFile; productRef = 71E57BB02C9F0AEF00FE6AC7 /* GoogleMobileAds */; };
+		71E57BB32C9F0CF700FE6AC7 /* AdMobInterstitial.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71E57BB22C9F0CF700FE6AC7 /* AdMobInterstitial.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -53,6 +55,7 @@
 		71BB72ED2C9A461A00138B14 /* mondict.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = mondict.json; sourceTree = "<group>"; };
 		71E57BA52C9EB52500FE6AC7 /* AddWordView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddWordView.swift; sourceTree = "<group>"; };
 		71E57BAD2C9EE37F00FE6AC7 /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
+		71E57BB22C9F0CF700FE6AC7 /* AdMobInterstitial.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdMobInterstitial.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,6 +63,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				71E57BB12C9F0AEF00FE6AC7 /* GoogleMobileAds in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -87,6 +91,7 @@
 				7170748A2C9B330100775317 /* LanguageViewModel.swift */,
 				717074882C9B30D800775317 /* Bundle+Extensions.swift */,
 				716A0F952C9C7E5F00537B25 /* DataLoader.swift */,
+				71E57BB22C9F0CF700FE6AC7 /* AdMobInterstitial.swift */,
 			);
 			path = DataModel;
 			sourceTree = "<group>";
@@ -158,6 +163,9 @@
 			dependencies = (
 			);
 			name = mon2engdict;
+			packageProductDependencies = (
+				71E57BB02C9F0AEF00FE6AC7 /* GoogleMobileAds */,
+			);
 			productName = mon2engdict;
 			productReference = 71BB72CD2C9A403300138B14 /* mon2engdict.app */;
 			productType = "com.apple.product-type.application";
@@ -187,6 +195,9 @@
 				"my-MM",
 			);
 			mainGroup = 71BB72C42C9A403300138B14;
+			packageReferences = (
+				71E57BAF2C9F0AEF00FE6AC7 /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */,
+			);
 			productRefGroup = 71BB72CE2C9A403300138B14 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -227,6 +238,7 @@
 				717074872C9B1D8E00775317 /* LanguageManager.swift in Sources */,
 				71BB72DD2C9A403600138B14 /* mon2engdict.xcdatamodeld in Sources */,
 				716A0F962C9C7E5F00537B25 /* DataLoader.swift in Sources */,
+				71E57BB32C9F0CF700FE6AC7 /* AdMobInterstitial.swift in Sources */,
 				71E57BA62C9EB52500FE6AC7 /* AddWordView.swift in Sources */,
 				71BB72D12C9A403300138B14 /* mon2engdictApp.swift in Sources */,
 				71536D212C9B8C79005272DA /* DictionaryView.swift in Sources */,
@@ -377,7 +389,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 15;
 				DEVELOPMENT_ASSET_PATHS = "\"mon2engdict/Preview Content\"";
 				DEVELOPMENT_TEAM = 86SZC8RRQ7;
 				ENABLE_PREVIEWS = YES;
@@ -409,7 +421,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 15;
 				DEVELOPMENT_ASSET_PATHS = "\"mon2engdict/Preview Content\"";
 				DEVELOPMENT_TEAM = 86SZC8RRQ7;
 				ENABLE_PREVIEWS = YES;
@@ -457,6 +469,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		71E57BAF2C9F0AEF00FE6AC7 /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/googleads/swift-package-manager-google-mobile-ads.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 11.10.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		71E57BB02C9F0AEF00FE6AC7 /* GoogleMobileAds */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 71E57BAF2C9F0AEF00FE6AC7 /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */;
+			productName = GoogleMobileAds;
+		};
+/* End XCSwiftPackageProductDependency section */
 
 /* Begin XCVersionGroup section */
 		71BB72DB2C9A403600138B14 /* mon2engdict.xcdatamodeld */ = {

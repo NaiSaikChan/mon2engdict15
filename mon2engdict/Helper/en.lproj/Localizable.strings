@@ -26,6 +26,11 @@
 "Dark" = "Dark";
 "System" = "System";
 "About App" = "Credit to Nai Aung Nyan Lynn who delevop and digitalize the main data source of this English to Mon Dictionary from Nai Tun Wai's dictionary book and others. iOS App Developer Nai Saik Chan.";
+"Sort Order" = "Sort Order";
+"A-Z" = "A-Z";
+"Z-A" = "Z-A";
+"Random" = "Random";
+"Use Default" = "Use Default Font Size";
 
 /* ContentView */
 "Setting" = "Setting";

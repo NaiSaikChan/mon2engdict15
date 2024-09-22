@@ -13,6 +13,7 @@ struct DetailView: View {
     @ObservedObject var dict: MonDic
     @Environment(\.managedObjectContext) private var viewContext
     @Environment(\.fontSize) var fontSize
+    @AppStorage("fontSize") private var fontSizeDouble: Double = 16
     
     public var synthesizer = AVSpeechSynthesizer()
     
@@ -22,9 +23,9 @@ struct DetailView: View {
                 VStack(alignment: .leading) {
                     HStack {
                         Text(dict.word ?? "")
-                            .font(.custom("Pyidaungsu", size: fontSize+8))
+                            .font(.custom("Pyidaungsu", size: fontSizeDouble+8))
                             .bold()
-                        Spacer()
+                        
                         Button(action: {
                             toggleFavorite()
                         }) {
@@ -32,11 +33,13 @@ struct DetailView: View {
                                 .foregroundColor(dict.isFavorite ? .yellow : .gray)
                         }
                         .accessibilityLabel(dict.isFavorite ? NSLocalizedString("Remove from favorites", comment: "For remove the favorites word.") : NSLocalizedString("Add to favorites", comment: "For add the favoites word."))
-                        .font(.custom("Pyidaungsu", size: fontSize))
+                        .font(.custom("Pyidaungsu", size: fontSizeDouble))
+                        Spacer()
                     }
+                        .padding(.all,3)
                     
                     Text(dict.def ?? "")
-                        .font(.custom("Pyidaungsu", size: fontSize+2))
+                        .font(.custom("Pyidaungsu", size: fontSizeDouble+2))
                         .foregroundColor(.secondary)
                     
                     Button (action: {
@@ -45,7 +48,7 @@ struct DetailView: View {
                         HStack {
                             Image(systemName: "speaker.wave.2.fill")
                             Text(NSLocalizedString("Pronounce in English", comment: "To pronunce in only English."))
-                                .font(.custom("Pyidaungsu", size: fontSize))
+                                .font(.custom("Pyidaungsu", size: fontSizeDouble))
                         }
                         .padding()
                         .foregroundColor(.white)
@@ -59,7 +62,7 @@ struct DetailView: View {
                 .toolbar {
                     ToolbarItem(placement: .principal) {
                         Text((NSLocalizedString("Detail", comment: "the dictionary word detail.")))
-                            .font(.custom("Pyidaungsu", size:fontSize))
+                            .font(.custom("Pyidaungsu", size:fontSizeDouble))
                     }
                 }
             }

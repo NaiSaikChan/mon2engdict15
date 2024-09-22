@@ -25,6 +25,11 @@
 "Light" = "တၟး";
 "Dark" = "ဂၠု";
 "System" = "System";
+"Sort Order" = "ပြေၚ်လၟေၚ်အက္ခရ်";
+"A-Z" = "က-အ";
+"Z-A" = "အ-က";
+"Random" = "ဆဆဵု";
+"Use Default" = "အဝဲအက္ခရ်ပကတိ";
 
 /* ContentView */
 "Setting" = "ဒၞာဲချိင်";

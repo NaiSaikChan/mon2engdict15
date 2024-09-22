@@ -8,10 +8,11 @@
 import SwiftUI
 
 struct SettingsView: View {
-    //@AppStorage("isDarkMode") private var isDarkMode = false
+    @AppStorage("sortMode") private var sortMode: SortMode = .az
     @AppStorage("appLanguage") private var appLanguage = "en"
     @AppStorage("themeMode") private var themeMode: ThemeMode = .system
     @AppStorage("fontSize") private var fontSizeDouble: Double = 16
+    @AppStorage("useDefaultFontSize") private var useDefaultFontSize: Bool = true
     
     @ObservedObject var languageViewModel: LanguageViewModel
     
@@ -20,7 +21,7 @@ struct SettingsView: View {
     }
     
     var body: some View {
-        
+        NavigationView {
             Form {
                 ///Dark mode button
                 Section(header: Text(NSLocalizedString("Appearance", comment: "Appearance section header"))) {
@@ -33,14 +34,31 @@ struct SettingsView: View {
                 }
                 .font(.custom("Pyidaungsu", size: fontSize))
                 
+                /// Sorting Option
+                Section(header: Text(NSLocalizedString("Sort Order", comment: "for sorting"))) {
+                    Picker("Sort", selection: $sortMode) {
+                        ForEach(SortMode.allCases, id: \.self) { mode in
+                            Text(mode.disName).tag(mode)
+                        }
+                    }
+                    .pickerStyle(SegmentedPickerStyle())
+                }.font(.custom("Pyidaungsu", size: fontSize))
+                
                 /// Font Size Section
                 Section(header: Text(NSLocalizedString("Font Size", comment: "fon size header"))) {
-                    Slider(value: $fontSizeDouble, in: 14...26, step: 1) {
-                        Text(NSLocalizedString("Font Size", comment: "fon size header"))
+                    /// Toggle to use default font size
+                    Toggle(isOn: $useDefaultFontSize) {
+                        Text(NSLocalizedString("Use Default", comment: "use default size"))
+                    }
+                    /// Conditionally enable the slider based on the toggle
+                    if !useDefaultFontSize {
+                        Slider(value: $fontSizeDouble, in: 14...26, step: 1) {
+                            Text(NSLocalizedString("Font Size", comment: "fon size header"))
+                                .font(.custom("Pyidaungsu", size: fontSize))
+                        }
+                        Text(NSLocalizedString("Current Size", comment: "change the font size")+": \(Int(fontSize))")
                             .font(.custom("Pyidaungsu", size: fontSize))
                     }
-                    Text(NSLocalizedString("Current Size", comment: "change the font size")+": \(Int(fontSize))")
-                        .font(.custom("Pyidaungsu", size: fontSize))
                 }.font(.custom("Pyidaungsu", size: fontSize))
                 
                 ///Language switch
@@ -65,6 +83,11 @@ struct SettingsView: View {
             .onChange(of: themeMode) { _ in
                 applyTheme()
             }
+            .onChange(of: useDefaultFontSize) { newValue in
+                if newValue {
+                    fontSizeDouble = 16 // Reset to default when toggle is on
+                }
+            }
             .onAppear {
                 applyTheme()
             }
@@ -75,7 +98,7 @@ struct SettingsView: View {
                         .font(.custom("Pyidaungsu", size: fontSize))
                 }
             }
-        
+        }.navigationViewStyle(StackNavigationViewStyle())
     }
     
     
@@ -120,8 +143,17 @@ enum ThemeMode: String, CaseIterable {
     }
 }
 
-//struct SettingsView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        SettingsView(languageViewModel: languageViewModel)
-//    }
-//}
+/// Sort the word
+enum SortMode: String, CaseIterable {
+    case az
+    case za
+    case random
+    
+    var disName: String {
+        switch self {
+        case .az: return NSLocalizedString("A-Z", comment: "a to z")
+        case .za: return NSLocalizedString("Z-A", comment: "z to a")
+        case .random: return NSLocalizedString("Random", comment: "random")
+        }
+    }
+}
