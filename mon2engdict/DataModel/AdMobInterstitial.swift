@@ -16,9 +16,9 @@ class InterstitialAdManager: NSObject, GADFullScreenContentDelegate, ObservableO
     }
     
     // Load the Interstitial Ad
-    private func loadInterstitialAd() {
+    func loadInterstitialAd() {
         let request = GADRequest()
-        let adUnitID = "ca-app-pub-3940256099942544/4411468910" // Replace with your AdMob Interstitial Unit ID
+        let adUnitID = "ca-app-pub-2824674932258413/4008105412" // Replace with your AdMob Interstitial Unit ID
         adLoadAttempts += 1
         GADInterstitialAd.load(withAdUnitID: adUnitID, request: request) { ad, error in
             if let error = error {
@@ -53,7 +53,7 @@ class InterstitialAdManager: NSObject, GADFullScreenContentDelegate, ObservableO
     }
     
     // Function to retry loading ad after a delay
-    private func scheduleRetry() {
+    func scheduleRetry() {
         print("Scheduling retry in 3 minute.")
         adLoadTimer?.invalidate() // Cancel previous timer if it's still active
         adLoadTimer = Timer.scheduledTimer(withTimeInterval: 180.0, repeats: false) { [weak self] _ in

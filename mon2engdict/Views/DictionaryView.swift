@@ -74,6 +74,7 @@ struct DictionaryView: View {
                     }
                 } else {
                     print("Ad wasn't ready")
+                    adManager.loadInterstitialAd()
                 }
             }
             .toolbar {
