@@ -40,10 +40,10 @@ struct DictionaryView: View {
                     List(sortedWords, id: \.self) { item in
                         NavigationLink(destination: DetailView(dict: item)) {
                             VStack(alignment: .leading, spacing: 2) {
-                                Text(highlightText(for: item.word ?? ""))
+                                Text(highlightText(for: item.word ?? "No word"))
                                     .font(.custom("Pyidaungsu", size: fontSizeDouble+4))
                                     .bold()
-                                Text(highlightText(for: item.def ?? ""))
+                                Text(highlightText(for: item.def ?? "No Definition"))
                                     .font(.custom("Pyidaungsu", size: fontSizeDouble))
                                     .foregroundColor(.secondary)
                                     .lineLimit(3)
@@ -74,7 +74,7 @@ struct DictionaryView: View {
                     }
                 } else {
                     print("Ad wasn't ready")
-                    adManager.loadInterstitialAd()
+                    //adManager.loadInterstitialAd()
                 }
             }
             .toolbar {
@@ -99,13 +99,14 @@ struct DictionaryView: View {
     
     /// Apply sorting based on the user's setting
     var sortedWords: [MonDic] {
+        let caseInsensitiveSort: (MonDic, MonDic) -> Bool = { ($0.word ?? "").lowercased() < ($1.word ?? "").lowercased() }
         switch sortMode {
         case .az:
-            return words.sorted { ($0.word ?? "") < ($1.word ?? "") } // Sort A-Z by word property
+            return words.sorted(by: caseInsensitiveSort) // Case-insensitive A-Z sort
         case .za:
-            return words.sorted { ($0.word ?? "") > ($1.word ?? "") } // Sort Z-A by word property
+            return words.sorted(by: { ($0.word ?? "").lowercased() > ($1.word ?? "").lowercased() }) // Case-insensitive Z-A sort
         case .random:
-            return words.shuffled() // Random order
+            return words.shuffled()
         }
     }
     
@@ -124,11 +125,26 @@ struct DictionaryView: View {
         
         DispatchQueue.global(qos: .userInitiated).async {
             let fetchRequest: NSFetchRequest<MonDic> = MonDic.fetchRequest()
-            fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \MonDic.word, ascending: true)]
             
-            /// Apply a predicate if the search query is not empty
+            /// Apply a predicate based on search text
             if !query.isEmpty {
-                fetchRequest.predicate = NSPredicate(format: "word BEGINSWITH[cd] %@", query)
+                let regex = try! NSRegularExpression(pattern: "^[A-Za-z]")
+                let range = NSRange(location: 0, length: query.utf16.count)
+                let startsWithLetter = regex.firstMatch(in: query, options: [], range: range) != nil
+                
+                if startsWithLetter {
+                    // If query starts with [A-Za-z]
+                    let beginsWithPredicate = NSPredicate(format: "word BEGINSWITH[cd] %@", query)
+                    let containsInDefPredicate = NSPredicate(format: "def CONTAINS[cd] %@", query)
+                    let compoundPredicate = NSCompoundPredicate(orPredicateWithSubpredicates: [beginsWithPredicate, containsInDefPredicate])
+                    fetchRequest.predicate = compoundPredicate
+                } else {
+                    // If query doesn't start with [A-Za-z]
+                    let exactMatchPredicate = NSPredicate(format: "word ==[cd] %@", query)
+                    let containsInDefPredicate = NSPredicate(format: "def ==[cd] %@", query)
+                    let compoundPredicate = NSCompoundPredicate(orPredicateWithSubpredicates: [exactMatchPredicate, containsInDefPredicate])
+                    fetchRequest.predicate = compoundPredicate
+                }
             }
             
             do {
@@ -172,8 +188,6 @@ struct DictionaryView: View {
         return windowScene.windows.first?.rootViewController
     }
 }
-
-
 
 struct DictionaryView_Previews: PreviewProvider {
     static var previews: some View {
