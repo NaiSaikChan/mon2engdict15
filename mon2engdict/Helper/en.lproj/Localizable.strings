@@ -31,6 +31,8 @@
 "Z-A" = "Z-A";
 "Random" = "Random";
 "Use Default" = "Use Default Font Size";
+"Preview" = "Preview";
+"Version" = "Version";
 
 /* ContentView */
 "Setting" = "Setting";
@@ -40,17 +42,27 @@
 /* DictionaryView */
 "MEM Dictionary" = "MEM Dictionary";
 "Search word" = "Search word";
+"words" = "words";
+"No words available" = "No words available";
+"No results for" = "No results for";
+"Try a different spelling" = "Try a different spelling";
 
 /* DetailView */
 "Detail" = "Detail";
 "Remove from favorites" = "Remove from favorites";
 "Add to favorites" = "Add to favorites";
 "Pronounce in English" = "Pronounce in English";
+"Pronounce" = "Pronounce";
+"Copy" = "Copy";
+"Copied!" = "Copied!";
+"Share" = "Share";
 
 /* FavoritesView */
-"Favirotes Word" = "Favirotes Word";
-"Favirotes" = "Favirotes";
-
+"Favirotes Word" = "Favorites";
+"Favirotes" = "Favorites";
+"Favorites" = "Favorites";
+"No favorites yet" = "No favorites yet";
+"Tap the heart icon on any word to save it here" = "Tap the heart icon on any word to save it here";
 
 /* AddWordView */
 "New Word" = "New Word";
@@ -58,5 +70,6 @@
 "Definition" = "Definition";
 "Own add Word" = "Your personal saved words in the dictionary will be lost after deleting the app.";
 "Add Word" = "Add Word";
+"Word" = "Word";
 "Cancel" = "Cancel";
 "Save" = "Save";

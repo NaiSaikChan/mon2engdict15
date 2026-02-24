@@ -1,4 +1,4 @@
-/* 
+/*
   Localization.strings
   mon2engdict
 
@@ -24,12 +24,14 @@
 "Current Size" = "အဝဲ";
 "Light" = "တၟး";
 "Dark" = "ဂၠု";
-"System" = "အတိုၚ်စက်";
+"System" = "အတိုင်စက်";
 "Sort Order" = "ပြေၚ်လၟေၚ်အက္ခရ်";
 "A-Z" = "က-အ";
 "Z-A" = "အ-က";
 "Random" = "ဆဆဵု";
 "Use Default" = "အဝဲအက္ခရ်ပကတိ";
+"Preview" = "ပြဝ်ရဴ";
+"Version" = "ဗာရှေန်";
 
 /* ContentView */
 "Setting" = "ဒၞာဲချိင်";
@@ -39,16 +41,27 @@
 /* DictionaryView */
 "MEM Dictionary" = "အဘိဓါန် အၚ်္ဂလိက်-မန်";
 "Search word" = "ဂၠာဲဝေါဟာ";
+"words" = "ဝေါဟာ";
+"No words available" = "ဟွံမဲ ဝေါဟာ";
+"No results for" = "ဟွံဆဵုဝေါဟာသွက်";
+"Try a different spelling" = "ချိၚ်အက္ခရ်တၟိညိ";
 
 /* DetailView */
 "Detail" = "ဗွဲတရး ဝေါဟာ";
 "Remove from favorites" = "ဇိုတ်ပ္တိတ်နူ ဝေါဟာဒးကၞပ်စိုတ်";
 "Add to favorites" = "ထပ်စုတ် ဝေါဟာဒးကၞပ်စိုတ်";
 "Pronounce in English" = "ပ္တိတ်ဗှ်ရမျာၚ် အၚ်္ဂလိက်";
+"Pronounce" = "ဗှ်ရမျာၚ်";
+"Copy" = "ကူဆာဲ";
+"Copied!" = "ကူဆာဲတုဲ!";
+"Share" = "ပါ်ပရအ်";
 
 /* FavoritesView */
 "Favirotes Word" = "ဝေါဟာဒးဂၞပ်";
 "Favirotes" = "ဝေါဟာဒးဂၞပ်ဂမၠိုၚ်";
+"Favorites" = "ဝေါဟာဒးဂၞပ်ဂမၠိုၚ်";
+"No favorites yet" = "ဟွံမဲ ဝေါဟာဒးဂၞပ်ဏီ";
+"Tap the heart icon on any word to save it here" = "နူက်ကၠေဝ်ဂၞပ်စိုတ် ပ္ဍဲဝေါဟာညမွဲမွဲ သွက်ဂိုၚ်ဒိပ်ဒၞာဲဏံ";
 
 /* AddWordView */
 "New Word" = "ဝေါဟာတၟိ";
@@ -56,5 +69,6 @@
 "Definition" = "အဓိပ္ပါယ်";
 "Own add Word" = "ဝေါဟာနာဲထပ်စုတ်စကေတ်တအ်ဏံဝွံ အခါရနာဲဇိုတ်ပ္တိတ် App ဏံနူဖုၚ်မ္ဂး ဝေါဟာတအ်ဂှ်ကၠေံအာအိုတ်ရောၚ်။";
 "Add Word" = "ထပ်စုတ်ဝေါဟာ";
+"Word" = "ဝေါဟာ";
 "Cancel" = "တးပါဲ";
 "Save" = "ဂိုၚ်ဒိပ်";

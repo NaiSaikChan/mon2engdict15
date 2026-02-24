@@ -10,10 +10,8 @@ import CoreData
 
 struct FavoritesView: View {
     @Environment(\.managedObjectContext) private var viewContext
-    @Environment(\.fontSize) var fontSize
     @AppStorage("fontSize") private var fontSizeDouble: Double = 16
     
-    ///Fatch Request for the favorite dic word
     @FetchRequest(
         sortDescriptors: [NSSortDescriptor(keyPath: \MonDic.word, ascending: true)],
         predicate: NSPredicate(format: "isFavorite == true"),
@@ -22,32 +20,77 @@ struct FavoritesView: View {
     
     var body: some View {
         NavigationView {
-            List {
-                ForEach(dictionary) { item in
-                    NavigationLink(destination: DetailView(dict: item)) {
-                        VStack(alignment: .leading) {
-                            Text(item.word ?? "")
-                                .font(.custom("Pyidaungsu", size: fontSizeDouble+4))
-                                .bold()
-                            Text(item.def ?? "")
-                                .font(.custom("Pyidaungsu", size: fontSizeDouble))
-                                .foregroundColor(.secondary)
-                                .lineLimit(3)
-                        }
-                        .padding(.vertical, 5)
+            Group {
+                if dictionary.isEmpty {
+                    // Empty state
+                    VStack(spacing: 16) {
+                        Spacer()
+                        Image(systemName: "heart.slash")
+                            .font(.system(size: 52))
+                            .foregroundStyle(.quaternary)
+                        Text(NSLocalizedString("No favorites yet", comment: "Empty favorites state title"))
+                            .font(.custom("Pyidaungsu", size: 17))
+                            .fontWeight(.medium)
+                            .foregroundStyle(.secondary)
+                        Text(NSLocalizedString("Tap the heart icon on any word to save it here", comment: "Empty favorites hint"))
+                            .font(.custom("Pyidaungsu", size: 14))
+                            .foregroundStyle(.tertiary)
+                            .multilineTextAlignment(.center)
+                            .padding(.horizontal, 40)
+                        Spacer()
                     }
+                    .frame(maxWidth: .infinity)
+                } else {
+                    List {
+                        ForEach(dictionary) { item in
+                            NavigationLink {
+                                DetailView(dict: item)
+                            } label: {
+                                DictionaryRowView(
+                                    word: item.word ?? "",
+                                    definition: item.def ?? "",
+                                    searchText: "",
+                                    fontSize: fontSizeDouble,
+                                    isFavorite: item.isFavorite
+                                )
+                            }
+                        }
+                        .onDelete(perform: unfavoriteItems)
+                    }
+                    .listStyle(.plain)
                 }
             }
-            //.navigationTitle(NSLocalizedString("Favirotes Word", comment: "The word favirotes word."))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .principal) {
-                    Text((NSLocalizedString("Favirotes", comment: "the dictionary favirotes word.")))
-                        .font(.custom("Pyidaungsu", size:fontSizeDouble))
+                    VStack(spacing: 0) {
+                        Text(NSLocalizedString("Favorites", comment: "Favorites navigation title"))
+                            .font(.custom("Pyidaungsu", size: fontSizeDouble))
+                            .fontWeight(.semibold)
+                        if !dictionary.isEmpty {
+                            Text("\(dictionary.count) " + NSLocalizedString("words", comment: "result count label"))
+                                .font(.custom("Pyidaungsu", size: fontSizeDouble - 4))
+                                .foregroundStyle(.secondary)
+                        }
+                    }
                 }
             }
-            
-        }.navigationViewStyle(StackNavigationViewStyle())
+        }
+        .navigationViewStyle(StackNavigationViewStyle())
+    }
+    
+    // MARK: - Swipe to Unfavorite
+    
+    private func unfavoriteItems(at offsets: IndexSet) {
+        for index in offsets {
+            let item = dictionary[index]
+            item.isFavorite = false
+        }
+        do {
+            try viewContext.save()
+        } catch {
+            print("Failed to unfavorite: \(error)")
+        }
     }
 }
 
@@ -56,3 +99,4 @@ struct FavoritesView_Previews: PreviewProvider {
         FavoritesView().environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
     }
 }
+

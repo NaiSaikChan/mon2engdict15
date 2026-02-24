@@ -10,40 +10,36 @@ import CoreData
 
 struct ContentView: View {
     @Environment(\.managedObjectContext) private var viewContext
-    @Environment(\.fontSize) var fontSize
     @StateObject var languageViewModel = LanguageViewModel()
     @AppStorage("fontSize") private var fontSizeDouble: Double = 16
     
     var body: some View {
         TabView {
             DictionaryView()
-                .tabItem{
-                    VStack {
-                        Image(systemName: "book")
-                        Text(NSLocalizedString("Dictionary", comment: "To view dictionay."))
-                            .font(.custom("Pyidaungsu", size: 16))
-                    }
+                .tabItem {
+                    Label(
+                        NSLocalizedString("Dictionary", comment: "To view dictionary."),
+                        systemImage: "character.book.closed.fill"
+                    )
                 }
             
             FavoritesView()
-                .tabItem{
-                    VStack {
-                        Image(systemName: "heart.fill")
-                        Text(NSLocalizedString("Favorite", comment: "To view the saved favorite word."))
-                            .font(.custom("Pyidaungsu", size: 16))
-                    }
+                .tabItem {
+                    Label(
+                        NSLocalizedString("Favorite", comment: "To view the saved favorite word."),
+                        systemImage: "heart.fill"
+                    )
                 }
-            
             
             SettingsView(languageViewModel: languageViewModel)
-                .tabItem{
-                    VStack {
-                        Image(systemName: "gearshape")
-                        Text(NSLocalizedString("Setting", comment: "Setting View"))
-                            .font(.custom("Pyidaungsu", size: 16))
-                    }
+                .tabItem {
+                    Label(
+                        NSLocalizedString("Setting", comment: "Setting View"),
+                        systemImage: "gearshape.fill"
+                    )
                 }
         }
+        .tint(.blue)
         .environmentObject(languageViewModel)
         .onReceive(NotificationCenter.default.publisher(for: NSNotification.Name("LanguageChanged"))) { _ in
             languageViewModel.currentLanguage = LanguageManager.shared.currentLanguage()

@@ -8,54 +8,125 @@
 import SwiftUI
 import CoreData
 
+// MARK: - First-letter avatar color helper
+private let avatarColors: [Color] = [
+    .blue, .purple, .orange, .pink, .teal, .indigo, .mint, .cyan, .brown, .green
+]
+
+private func avatarColor(for letter: Character) -> Color {
+    let index = Int(letter.asciiValue ?? 0) % avatarColors.count
+    return avatarColors[index]
+}
+
 // MARK: - Extracted Row View
-/// Separate struct so SwiftUI can skip re-rendering rows whose data hasn't changed.
-/// Using Equatable conformance lets SwiftUI short-circuit its diff for unchanged rows.
+
 struct DictionaryRowView: View, Equatable {
     let word: String
     let definition: String
     let searchText: String
     let fontSize: Double
+    let isFavorite: Bool
     
     static func == (lhs: DictionaryRowView, rhs: DictionaryRowView) -> Bool {
         lhs.word == rhs.word &&
         lhs.definition == rhs.definition &&
         lhs.searchText == rhs.searchText &&
-        lhs.fontSize == rhs.fontSize
+        lhs.fontSize == rhs.fontSize &&
+        lhs.isFavorite == rhs.isFavorite
+    }
+    
+    private var firstLetter: Character {
+        word.first ?? "?"
     }
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 2) {
-            if searchText.isEmpty {
-                // Fast path: plain Text — no AttributedString allocation
-                Text(word)
-                    .font(.custom("Pyidaungsu", size: fontSize + 4))
-                    .bold()
-                Text(definition)
-                    .font(.custom("Pyidaungsu", size: fontSize))
-                    .foregroundColor(.secondary)
-                    .lineLimit(3)
-            } else {
-                // Slow path: only used when user is actively searching
-                Text(highlightText(for: word))
-                    .font(.custom("Pyidaungsu", size: fontSize + 4))
-                    .bold()
-                Text(highlightText(for: definition))
-                    .font(.custom("Pyidaungsu", size: fontSize))
-                    .foregroundColor(.secondary)
-                    .lineLimit(3)
+        HStack(spacing: 14) {
+            // First-letter circle avatar
+            Text(String(firstLetter).uppercased())
+                .font(.system(size: fontSize, weight: .bold, design: .rounded))
+                .foregroundColor(.white)
+                .frame(width: 42, height: 42)
+                .background(avatarColor(for: firstLetter))
+                .clipShape(Circle())
+            
+            // Word & definition
+            VStack(alignment: .leading, spacing: 4) {
+                HStack(spacing: 6) {
+                    if searchText.isEmpty {
+                        Text(word)
+                            .font(.custom("Pyidaungsu", size: fontSize + 2))
+                            .fontWeight(.semibold)
+                            .lineLimit(1)
+                    } else {
+                        Text(highlightText(for: word))
+                            .font(.custom("Pyidaungsu", size: fontSize + 2))
+                            .fontWeight(.semibold)
+                            .lineLimit(1)
+                    }
+                    
+                    if isFavorite {
+                        Image(systemName: "heart.fill")
+                            .font(.caption2)
+                            .foregroundColor(.pink)
+                    }
+                }
+                
+                if searchText.isEmpty {
+                    Text(definition)
+                        .font(.custom("Pyidaungsu", size: fontSize - 1))
+                        .foregroundStyle(.secondary)
+                        .lineLimit(2)
+                } else {
+                    Text(highlightText(for: definition))
+                        .font(.custom("Pyidaungsu", size: fontSize - 1))
+                        .foregroundStyle(.secondary)
+                        .lineLimit(2)
+                }
             }
         }
-        .padding(.vertical, 5)
+        .padding(.vertical, 6)
     }
     
     private func highlightText(for text: String) -> AttributedString {
         var attributedString = AttributedString(text)
         if let range = attributedString.range(of: searchText, options: [.caseInsensitive, .diacriticInsensitive]) {
             attributedString[range].foregroundColor = .blue
-            attributedString[range].font = .bold(.body)()
+            attributedString[range].font = .custom("Pyidaungsu", size: fontSize + 2).bold()
         }
         return attributedString
+    }
+}
+
+// MARK: - Empty State View
+
+struct EmptySearchStateView: View {
+    let query: String
+    
+    var body: some View {
+        VStack(spacing: 16) {
+            Spacer()
+            Image(systemName: query.isEmpty ? "text.book.closed" : "magnifyingglass")
+                .font(.system(size: 48))
+                .foregroundStyle(.quaternary)
+            
+            if query.isEmpty {
+                Text(NSLocalizedString("No words available", comment: "Empty dictionary state"))
+                    .font(.custom("Pyidaungsu", size: 16))
+                    .foregroundStyle(.secondary)
+            } else {
+                Text(NSLocalizedString("No results for", comment: "No search results prefix") + " \"\(query)\"")
+                    .font(.custom("Pyidaungsu", size: 16))
+                    .foregroundStyle(.secondary)
+                    .multilineTextAlignment(.center)
+                
+                Text(NSLocalizedString("Try a different spelling", comment: "Search suggestion"))
+                    .font(.custom("Pyidaungsu", size: 14))
+                    .foregroundStyle(.tertiary)
+            }
+            Spacer()
+        }
+        .frame(maxWidth: .infinity)
+        .padding()
     }
 }
 
@@ -67,8 +138,6 @@ struct DictionaryView: View {
     @State private var isLoading: Bool = true
     @State private var showingAddWord = false
     @State private var hasLoadedInitialData = false
-    
-    /// Debounce: cancel the previous search task when a new keystroke arrives
     @State private var searchTask: DispatchWorkItem?
     
     @AppStorage("sortMode") private var sortMode: SortMode = .az
@@ -77,22 +146,37 @@ struct DictionaryView: View {
     @EnvironmentObject var languageViewModel: LanguageViewModel
     @StateObject var adManager = InterstitialAdManager()
     
-    @Environment(\.fontSize) var fontSize
     @Environment(\.managedObjectContext) private var viewContext
     
     var body: some View {
         NavigationView {
             Group {
                 if isLoading {
-                    VStack {
-                        ProgressView("Loading...")
-                            .progressViewStyle(CircularProgressViewStyle())
-                            .padding()
-                            .foregroundColor(.gray)
+                    // Loading placeholder
+                    List {
+                        ForEach(0..<8, id: \.self) { _ in
+                            HStack(spacing: 14) {
+                                Circle()
+                                    .fill(Color.gray.opacity(0.15))
+                                    .frame(width: 42, height: 42)
+                                VStack(alignment: .leading, spacing: 8) {
+                                    RoundedRectangle(cornerRadius: 4)
+                                        .fill(Color.gray.opacity(0.15))
+                                        .frame(width: 140, height: 14)
+                                    RoundedRectangle(cornerRadius: 4)
+                                        .fill(Color.gray.opacity(0.10))
+                                        .frame(width: 200, height: 12)
+                                }
+                            }
+                            .padding(.vertical, 6)
+                        }
                     }
+                    .listStyle(.plain)
+                    .redacted(reason: .placeholder)
+                } else if words.isEmpty {
+                    EmptySearchStateView(query: searchText)
                 } else {
                     List(words, id: \.objectID) { item in
-                        /// Lazy NavigationLink: DetailView is only created when the user taps
                         NavigationLink {
                             DetailView(dict: item)
                         } label: {
@@ -100,17 +184,18 @@ struct DictionaryView: View {
                                 word: item.word ?? "No word",
                                 definition: item.def ?? "No Definition",
                                 searchText: searchText,
-                                fontSize: fontSizeDouble
+                                fontSize: fontSizeDouble,
+                                isFavorite: item.isFavorite
                             )
                             .equatable()
                         }
                     }
+                    .listStyle(.plain)
                 }
             }
             .searchable(text: $searchText, placement: .navigationBarDrawer(displayMode: .always),
                          prompt: NSLocalizedString("Search word", comment: "for searching words"))
             .onChange(of: searchText) { newValue in
-                /// Debounce search — wait 300ms after last keystroke before fetching
                 searchTask?.cancel()
                 let task = DispatchWorkItem {
                     fetchFilteredData(query: newValue)
@@ -126,29 +211,36 @@ struct DictionaryView: View {
                 hasLoadedInitialData = true
                 fetchFilteredData(query: "")
                 
-                // Show an interstitial ad after a delay — NOT during launch.
-                // This gives the UI time to fully render before presenting a full-screen ad.
                 DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
                     if adManager.isAdReady, let rootVC = getRootViewController() {
                         adManager.showAd(from: rootVC)
                     }
                 }
             }
-            // Re-fetch when the background JSON import finishes
             .onReceive(NotificationCenter.default.publisher(for: .dictionaryDataDidLoad)
                 .receive(on: DispatchQueue.main)) { _ in
                 fetchFilteredData(query: searchText)
             }
+            .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .principal) {
-                    Text(NSLocalizedString("MEM Dictionary", comment: "the dictionary navigation title."))
-                        .font(.custom("Pyidaungsu", size: fontSizeDouble))
+                    VStack(spacing: 0) {
+                        Text(NSLocalizedString("MEM Dictionary", comment: "the dictionary navigation title."))
+                            .font(.custom("Pyidaungsu", size: fontSizeDouble))
+                            .fontWeight(.semibold)
+                        if !isLoading && !words.isEmpty {
+                            Text("\(words.count) " + NSLocalizedString("words", comment: "result count label"))
+                                .font(.custom("Pyidaungsu", size: fontSizeDouble - 4))
+                                .foregroundStyle(.secondary)
+                        }
+                    }
                 }
                 ToolbarItem(placement: .primaryAction) {
-                    Button(action: {
+                    Button {
                         showingAddWord = true
-                    }) {
-                        Label(NSLocalizedString("Add Word", comment: "add word button"), systemImage: "plus.app.fill")
+                    } label: {
+                        Image(systemName: "plus.circle.fill")
+                            .font(.title3)
                     }
                 }
             }
@@ -163,11 +255,8 @@ struct DictionaryView: View {
     
     private func fetchFilteredData(query: String) {
         let fetchRequest: NSFetchRequest<MonDic> = MonDic.fetchRequest()
-        
-        /// Performance: Only materialize 20 objects at a time (the rest stay as faults)
         fetchRequest.fetchBatchSize = 20
         
-        /// Performance: Reduced limits — keeps SwiftUI diffing fast
         if query.isEmpty {
             fetchRequest.fetchLimit = 100
         } else {
@@ -199,8 +288,6 @@ struct DictionaryView: View {
             if sortMode == .random {
                 results.shuffle()
             } else if !query.isEmpty {
-                // Prioritize words that BEGIN WITH the query over definition-only matches.
-                // CoreData can't express this ordering, so we partition after the fetch.
                 let lowercasedQuery = query.lowercased()
                 let beginsWith = results.filter { ($0.word ?? "").lowercased().hasPrefix(lowercasedQuery) }
                 let others = results.filter { !($0.word ?? "").lowercased().hasPrefix(lowercasedQuery) }

@@ -12,7 +12,7 @@ extension Bundle {
         object_setClass(Bundle.main, BundleEx.self)
     }()
     
-    @objc class BundleEx: Bundle {
+    @objc class BundleEx: Bundle, @unchecked Sendable {
         override func localizedString(forKey key: String, value: String?, table tableName: String?) -> String {
             if let path = Bundle.main.path(forResource: LanguageManager.shared.currentLanguage(), ofType: "lproj"),
                let bundle = Bundle(path: path) {
@@ -23,7 +23,7 @@ extension Bundle {
     }
     
     public static func setLanguage(_ language: String) {
-        Bundle.onLanguageDispatchOnce
+        _ = Bundle.onLanguageDispatchOnce
         // Ensure the language bundle is loaded.
         UserDefaults.standard.set([language], forKey: "AppleLanguages")
         UserDefaults.standard.synchronize()

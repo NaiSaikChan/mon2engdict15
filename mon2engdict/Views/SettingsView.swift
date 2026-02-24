@@ -23,84 +23,192 @@ struct SettingsView: View {
     var body: some View {
         NavigationView {
             Form {
-                ///Dark mode button
-                Section(header: Text(NSLocalizedString("Appearance", comment: "Appearance section header"))) {
-                    Picker("Theme", selection: $themeMode) {
+                // MARK: - Appearance
+                Section(header: Text(NSLocalizedString("Appearance", comment: "Appearance section header"))
+                    .font(.custom("Pyidaungsu", size: fontSize))) {
+                    // Theme picker
+                    HStack {
+                        Label {
+                            Text(NSLocalizedString("Appearance", comment: "Appearance label"))
+                                .font(.custom("Pyidaungsu", size: fontSize))
+                        } icon: {
+                            Image(systemName: "circle.lefthalf.filled")
+                                .foregroundColor(.purple)
+                        }
+                    }
+                    
+                    Picker("", selection: $themeMode) {
                         ForEach(ThemeMode.allCases, id: \.self) { mode in
-                            Text(mode.displayName).tag(mode).font(.custom("Pyidaungsu", size: fontSize))
+                            Text(mode.displayName).tag(mode)
+                                .font(.custom("Pyidaungsu", size: fontSize))
                         }
                     }
                     .pickerStyle(SegmentedPickerStyle())
                 }
-                .font(.custom("Pyidaungsu", size: fontSize))
                 
-                /// Sorting Option
-                Section(header: Text(NSLocalizedString("Sort Order", comment: "for sorting"))) {
-                    Picker("Sort", selection: $sortMode) {
+                // MARK: - Sort Order
+                Section(header: Text(NSLocalizedString("Sort Order", comment: "Sort Order section header"))
+                    .font(.custom("Pyidaungsu", size: fontSize))) {
+                    HStack {
+                        Label {
+                            Text(NSLocalizedString("Sort Order", comment: "for sorting"))
+                                .font(.custom("Pyidaungsu", size: fontSize))
+                        } icon: {
+                            Image(systemName: "arrow.up.arrow.down")
+                                .foregroundColor(.blue)
+                        }
+                    }
+                    
+                    Picker("", selection: $sortMode) {
                         ForEach(SortMode.allCases, id: \.self) { mode in
                             Text(mode.disName).tag(mode)
+                                .font(.custom("Pyidaungsu", size: fontSize))
                         }
                     }
                     .pickerStyle(SegmentedPickerStyle())
-                }.font(.custom("Pyidaungsu", size: fontSize))
+                }
                 
-                /// Font Size Section
-                Section(header: Text(NSLocalizedString("Font Size", comment: "fon size header"))) {
-                    /// Toggle to use default font size
+                // MARK: - Font Size
+                Section(header: Text(NSLocalizedString("Font Size", comment: "font size header"))
+                    .font(.custom("Pyidaungsu", size: fontSize))) {
                     Toggle(isOn: $useDefaultFontSize) {
-                        Text(NSLocalizedString("Use Default", comment: "use default size"))
-                    }
-                    /// Conditionally enable the slider based on the toggle
-                    if !useDefaultFontSize {
-                        Slider(value: $fontSizeDouble, in: 14...26, step: 1) {
-                            Text(NSLocalizedString("Font Size", comment: "fon size header"))
+                        Label {
+                            Text(NSLocalizedString("Use Default", comment: "use default size"))
                                 .font(.custom("Pyidaungsu", size: fontSize))
+                        } icon: {
+                            Image(systemName: "textformat.size")
+                                .foregroundColor(.orange)
                         }
-                        Text(NSLocalizedString("Current Size", comment: "change the font size")+": \(Int(fontSize))")
-                            .font(.custom("Pyidaungsu", size: fontSize))
                     }
-                }.font(.custom("Pyidaungsu", size: fontSize))
+                    
+                    if !useDefaultFontSize {
+                        VStack(alignment: .leading, spacing: 8) {
+                            Slider(value: $fontSizeDouble, in: 14...26, step: 1)
+                                .tint(.orange)
+                            
+                            HStack {
+                                Text("A")
+                                    .font(.system(size: 12))
+                                    .foregroundStyle(.secondary)
+                                Spacer()
+                                Text(NSLocalizedString("Current Size", comment: "change the font size") + ": \(Int(fontSize))")
+                                    .font(.custom("Pyidaungsu", size: 13))
+                                    .foregroundStyle(.secondary)
+                                Spacer()
+                                Text("A")
+                                    .font(.system(size: 22))
+                                    .foregroundStyle(.secondary)
+                            }
+                        }
+                        
+                        // Live preview
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text(NSLocalizedString("Preview", comment: "Font preview label"))
+                                .font(.custom("Pyidaungsu", size: 13))
+                                .foregroundStyle(.tertiary)
+                            Text("Hello - မ္ၚဵုရအဴ")
+                                .font(.custom("Pyidaungsu", size: fontSize))
+                                .padding(10)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .background(Color(.systemGray6))
+                                .clipShape(RoundedRectangle(cornerRadius: 8))
+                        }
+                    }
+                }
                 
-                ///Language switch
-                Section(header: Text(NSLocalizedString("Language", comment: "Language section header"))) {
-                    Picker(NSLocalizedString("App Language", comment: "Language Picker label"), selection: $appLanguage) {
-                        Text(NSLocalizedString("English", comment: "English language")).tag("en")
-                            .font(.custom("Pyidaungsu", size: fontSize))
-                        Text(NSLocalizedString("Mon", comment: "Mon language")).tag("my-MM")
-                            .font(.custom("Pyidaungsu", size: fontSize))
+                // MARK: - Language
+                Section(header: Text(NSLocalizedString("Language", comment: "Language section header"))
+                    .font(.custom("Pyidaungsu", size: fontSize))) {
+                    HStack {
+                        Label {
+                            Text(NSLocalizedString("App Language", comment: "Language Picker label"))
+                                .font(.custom("Pyidaungsu", size: fontSize))
+                        } icon: {
+                            Image(systemName: "globe")
+                                .foregroundColor(.green)
+                        }
+                    }
+                    
+                    Picker("", selection: $appLanguage) {
+                        Text(NSLocalizedString("English", comment: "English language")).font(.custom("Pyidaungsu", size: fontSize)).tag("en")
+                        Text(NSLocalizedString("Mon", comment: "Mon language")).font(.custom("Pyidaungsu", size: fontSize)).tag("my-MM")
                     }
                     .pickerStyle(SegmentedPickerStyle())
                     .onChange(of: appLanguage) { newValue in
                         languageViewModel.setLanguage(languageCode: newValue)
                     }
-                }.font(.custom("Pyidaungsu", size: fontSize))
+                }
                 
-                ///About app
-                Section(header: Text(NSLocalizedString("About", comment: "About"))) {
-                    Text(NSLocalizedString("About App", comment: "About the App"))
-                }.font(.custom("Pyidaungsu", size: fontSize))
+                // MARK: - About
+                Section(header: Text(NSLocalizedString("About", comment: "About"))
+                    .font(.custom("Pyidaungsu", size: fontSize))) {
+                    // Credit
+                    VStack(alignment: .leading, spacing: 8) {
+                        Label {
+                            Text(NSLocalizedString("About", comment: "About"))
+                                .font(.custom("Pyidaungsu", size: fontSize))
+                                .fontWeight(.medium)
+                        } icon: {
+                            Image(systemName: "info.circle")
+                                .foregroundColor(.teal)
+                        }
+                        
+                        Text(NSLocalizedString("About App", comment: "About the App"))
+                            .font(.custom("Pyidaungsu", size: fontSize - 2))
+                            .foregroundStyle(.secondary)
+                            .lineSpacing(4)
+                    }
+                    .padding(.vertical, 4)
+                    
+                    // App version
+                    HStack {
+                        Label {
+                            Text(NSLocalizedString("Version", comment: "App version label"))
+                                .font(.custom("Pyidaungsu", size: fontSize))
+                        } icon: {
+                            Image(systemName: "app.badge")
+                                .foregroundColor(.indigo)
+                        }
+                        
+                        Spacer()
+                        
+                        Text(appVersion)
+                            .font(.custom("Pyidaungsu", size: fontSize - 1))
+                            .foregroundStyle(.secondary)
+                    }
+                }
             }
             .onChange(of: themeMode) { _ in
                 applyTheme()
             }
             .onChange(of: useDefaultFontSize) { newValue in
                 if newValue {
-                    fontSizeDouble = 16 // Reset to default when toggle is on
+                    fontSizeDouble = 16
                 }
             }
             .onAppear {
                 applyTheme()
             }
             .environment(\.fontSize, fontSize)
-            .toolbar{
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
                 ToolbarItem(placement: .principal) {
                     Text(NSLocalizedString("Settings", comment: "setting title"))
                         .font(.custom("Pyidaungsu", size: fontSize))
+                        .fontWeight(.semibold)
                 }
             }
-        }.navigationViewStyle(StackNavigationViewStyle())
+        }
+        .navigationViewStyle(StackNavigationViewStyle())
     }
     
+    // MARK: - Helpers
+    
+    private var appVersion: String {
+        let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0"
+        let build = Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "1"
+        return "\(version) (\(build))"
+    }
     
     private func applyTheme() {
         guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene else { return }
@@ -117,8 +225,10 @@ struct SettingsView: View {
     }
 }
 
+// MARK: - Environment Key & Enums
+
 struct FontSizeKey: EnvironmentKey {
-    static let defaultValue: CGFloat = 16 // Default font size
+    static let defaultValue: CGFloat = 16
 }
 
 extension EnvironmentValues {
@@ -128,7 +238,6 @@ extension EnvironmentValues {
     }
 }
 
-/// Enum for Theme Modes
 enum ThemeMode: String, CaseIterable {
     case light
     case dark
@@ -143,7 +252,6 @@ enum ThemeMode: String, CaseIterable {
     }
 }
 
-/// Sort the word
 enum SortMode: String, CaseIterable {
     case az
     case za
