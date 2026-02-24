@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="19574" systemVersion="20G1427" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="24512" systemVersion="25D125" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="Item" representedClassName="Item" syncable="YES" codeGenerationType="class">
         <attribute name="timestamp" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
     </entity>
@@ -9,9 +9,11 @@
         <attribute name="isFavorite" optional="YES" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
         <attribute name="lastViewed" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="word" optional="YES" attributeType="String"/>
+        <fetchIndex name="byWordIndex">
+            <fetchIndexElement property="word" type="Binary" order="ascending"/>
+        </fetchIndex>
+        <fetchIndex name="byFavoriteIndex">
+            <fetchIndexElement property="isFavorite" type="Binary" order="ascending"/>
+        </fetchIndex>
     </entity>
-    <elements>
-        <element name="Item" positionX="-63" positionY="-18" width="128" height="44"/>
-        <element name="MonDic" positionX="-63" positionY="-9" width="128" height="104"/>
-    </elements>
 </model>

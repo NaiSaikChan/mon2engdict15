@@ -15,21 +15,31 @@ struct mon2engdictApp: App {
     let persistenceController = PersistenceController.shared
     
     init() {
-        GADMobileAds.sharedInstance().start(completionHandler: nil)
+        // Load JSON into CoreData on a background thread (non-blocking).
+        loadDataIfNeeded(container: PersistenceController.shared.container)
     }
     
     var body: some Scene {
         WindowGroup {
             ContentView()
                 .environment(\.managedObjectContext, persistenceController.container.viewContext)
-                .onAppear {
-                    NotificationCenter.default.addObserver(forName: NSNotification.Name("LanguageChanged"), object: nil, queue: .main) { _ in
-                        currentLanguage = LanguageManager.shared.currentLanguage()
-                    }
-                }
                 .onReceive(NotificationCenter.default.publisher(for: NSNotification.Name("LanguageChanged"))) { _ in
                     currentLanguage = LanguageManager.shared.currentLanguage()
                 }
+                .onAppear {
+                    // Defer AdMob SDK init until after the first frame renders.
+                    // This prevents the heavy SDK setup from blocking app launch.
+                    DispatchQueue.main.async {
+                        GADMobileAds.sharedInstance().start { _ in
+                            print("AdMob SDK initialized.")
+                            NotificationCenter.default.post(name: .adMobSDKDidInitialize, object: nil)
+                        }
+                    }
+                }
         }
     }
+}
+
+extension Notification.Name {
+    static let adMobSDKDidInitialize = Notification.Name("adMobSDKDidInitialize")
 }

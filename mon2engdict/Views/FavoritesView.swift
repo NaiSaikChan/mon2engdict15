@@ -24,15 +24,18 @@ struct FavoritesView: View {
         NavigationView {
             List {
                 ForEach(dictionary) { item in
-                    VStack(alignment: .leading) {
-                        Text(item.word ?? "")
-                            .font(.custom("Pyidaungsu", size: fontSizeDouble+4))
-                            .bold()
-                        Text(item.def ?? "")
-                            .font(.custom("Pyidaungsu", size: fontSizeDouble))
-                            .foregroundColor(.secondary)
+                    NavigationLink(destination: DetailView(dict: item)) {
+                        VStack(alignment: .leading) {
+                            Text(item.word ?? "")
+                                .font(.custom("Pyidaungsu", size: fontSizeDouble+4))
+                                .bold()
+                            Text(item.def ?? "")
+                                .font(.custom("Pyidaungsu", size: fontSizeDouble))
+                                .foregroundColor(.secondary)
+                                .lineLimit(3)
+                        }
+                        .padding(.vertical, 5)
                     }
-                    .padding(.vertical, 5)
                 }
             }
             //.navigationTitle(NSLocalizedString("Favirotes Word", comment: "The word favirotes word."))

@@ -7,55 +7,99 @@ class InterstitialAdManager: NSObject, GADFullScreenContentDelegate, ObservableO
     private var interstitial: GADInterstitialAd?
     @Published var isAdReady = false
     private var adLoadAttempts = 0
-    private var maxAdLoadAttempts = 5
+    private let maxAdLoadAttempts = 5
     private var adLoadTimer: Timer?
+    private var sdkObserver: NSObjectProtocol?
+    
+    /// Track whether the SDK is initialized — ads must not be loaded before this.
+    private var isSDKInitialized = false
+    
+    private let adUnitID = "ca-app-pub-2824674932258413/4008105412"
     
     override init() {
         super.init()
-        loadInterstitialAd()
+        // Do NOT load an ad here — the SDK isn't ready yet.
+        // Instead, listen for the SDK-ready notification.
+        sdkObserver = NotificationCenter.default.addObserver(
+            forName: .adMobSDKDidInitialize,
+            object: nil,
+            queue: .main
+        ) { [weak self] _ in
+            self?.isSDKInitialized = true
+            self?.loadInterstitialAd()
+        }
     }
     
-    // Load the Interstitial Ad
+    deinit {
+        if let observer = sdkObserver {
+            NotificationCenter.default.removeObserver(observer)
+        }
+        adLoadTimer?.invalidate()
+    }
+    
+    // MARK: - Load
+    
     func loadInterstitialAd() {
-        let request = GADRequest()
-        let adUnitID = "ca-app-pub-2824674932258413/4008105412" // Replace with your AdMob Interstitial Unit ID
+        guard isSDKInitialized else {
+            print("AdMob SDK not ready yet, skipping ad load.")
+            return
+        }
+        
         adLoadAttempts += 1
-        GADInterstitialAd.load(withAdUnitID: adUnitID, request: request) { ad, error in
-            if let error = error {
-                print("Failed to load interstitial ad with error: \(error.localizedDescription)")
-                self.isAdReady = false
-                return
+        let request = GADRequest()
+        
+        GADInterstitialAd.load(withAdUnitID: adUnitID, request: request) { [weak self] ad, error in
+            DispatchQueue.main.async {
+                guard let self = self else { return }
+                if let error = error {
+                    print("Failed to load interstitial ad: \(error.localizedDescription)")
+                    self.isAdReady = false
+                    return
+                }
+                self.interstitial = ad
+                self.interstitial?.fullScreenContentDelegate = self
+                self.isAdReady = true
+                print("Interstitial ad loaded and ready.")
             }
-            self.interstitial = ad
-            self.interstitial?.fullScreenContentDelegate = self
-            self.isAdReady = true
-            print("Interstitial ad is loaded and ready to be shown.")
         }
     }
     
-    // Show the Interstitial Ad
-    func showAd(from rootViewController: UIViewController) {
-        if let interstitial = interstitial {
-            interstitial.present(fromRootViewController: rootViewController)
-        } else {
+    // MARK: - Show
+    
+    /// Show the ad only if it's ready. Returns true if the ad was presented.
+    @discardableResult
+    func showAd(from rootViewController: UIViewController) -> Bool {
+        guard let interstitial = interstitial else {
             print("Interstitial ad is not ready yet.")
+            return false
         }
+        interstitial.present(fromRootViewController: rootViewController)
+        return true
     }
     
-    // Ad delegate methods
+    // MARK: - GADFullScreenContentDelegate
+    
     func adDidDismissFullScreenContent(_ ad: GADFullScreenPresentingAd) {
         print("Ad was dismissed.")
+        isAdReady = false
+        interstitial = nil
+        
         if adLoadAttempts < maxAdLoadAttempts {
             scheduleRetry()
-            print("adLoadAttempts: \(adLoadAttempts)")
         }
-        //loadInterstitialAd()  // Load a new ad after dismissal
     }
     
-    // Function to retry loading ad after a delay
-    func scheduleRetry() {
-        print("Scheduling retry in 3 minute.")
-        adLoadTimer?.invalidate() // Cancel previous timer if it's still active
+    func ad(_ ad: GADFullScreenPresentingAd, didFailToPresentFullScreenContentWithError error: Error) {
+        print("Ad failed to present: \(error.localizedDescription)")
+        isAdReady = false
+        interstitial = nil
+    }
+    
+    // MARK: - Retry
+    
+    private func scheduleRetry() {
+        print("Scheduling ad retry in 3 minutes.")
+        adLoadTimer?.invalidate()
         adLoadTimer = Timer.scheduledTimer(withTimeInterval: 180.0, repeats: false) { [weak self] _ in
             self?.loadInterstitialAd()
         }

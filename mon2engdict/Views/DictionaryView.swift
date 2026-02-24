@@ -7,24 +7,78 @@
 
 import SwiftUI
 import CoreData
-import GoogleMobileAds
+
+// MARK: - Extracted Row View
+/// Separate struct so SwiftUI can skip re-rendering rows whose data hasn't changed.
+/// Using Equatable conformance lets SwiftUI short-circuit its diff for unchanged rows.
+struct DictionaryRowView: View, Equatable {
+    let word: String
+    let definition: String
+    let searchText: String
+    let fontSize: Double
+    
+    static func == (lhs: DictionaryRowView, rhs: DictionaryRowView) -> Bool {
+        lhs.word == rhs.word &&
+        lhs.definition == rhs.definition &&
+        lhs.searchText == rhs.searchText &&
+        lhs.fontSize == rhs.fontSize
+    }
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 2) {
+            if searchText.isEmpty {
+                // Fast path: plain Text — no AttributedString allocation
+                Text(word)
+                    .font(.custom("Pyidaungsu", size: fontSize + 4))
+                    .bold()
+                Text(definition)
+                    .font(.custom("Pyidaungsu", size: fontSize))
+                    .foregroundColor(.secondary)
+                    .lineLimit(3)
+            } else {
+                // Slow path: only used when user is actively searching
+                Text(highlightText(for: word))
+                    .font(.custom("Pyidaungsu", size: fontSize + 4))
+                    .bold()
+                Text(highlightText(for: definition))
+                    .font(.custom("Pyidaungsu", size: fontSize))
+                    .foregroundColor(.secondary)
+                    .lineLimit(3)
+            }
+        }
+        .padding(.vertical, 5)
+    }
+    
+    private func highlightText(for text: String) -> AttributedString {
+        var attributedString = AttributedString(text)
+        if let range = attributedString.range(of: searchText, options: [.caseInsensitive, .diacriticInsensitive]) {
+            attributedString[range].foregroundColor = .blue
+            attributedString[range].font = .bold(.body)()
+        }
+        return attributedString
+    }
+}
+
+// MARK: - Dictionary View
 
 struct DictionaryView: View {
     @State private var searchText = ""
     @State private var words: [MonDic] = []
     @State private var isLoading: Bool = true
     @State private var showingAddWord = false
+    @State private var hasLoadedInitialData = false
+    
+    /// Debounce: cancel the previous search task when a new keystroke arrives
+    @State private var searchTask: DispatchWorkItem?
     
     @AppStorage("sortMode") private var sortMode: SortMode = .az
     @AppStorage("fontSize") private var fontSizeDouble: Double = 16
     
-    @StateObject var languageViewModel = LanguageViewModel()
+    @EnvironmentObject var languageViewModel: LanguageViewModel
     @StateObject var adManager = InterstitialAdManager()
     
     @Environment(\.fontSize) var fontSize
     @Environment(\.managedObjectContext) private var viewContext
-    @Environment(\.horizontalSizeClass) private var horizonalSize
-    @Environment(\.verticalSizeClass) private var verticalSize
     
     var body: some View {
         NavigationView {
@@ -37,50 +91,58 @@ struct DictionaryView: View {
                             .foregroundColor(.gray)
                     }
                 } else {
-                    List(sortedWords, id: \.self) { item in
-                        NavigationLink(destination: DetailView(dict: item)) {
-                            VStack(alignment: .leading, spacing: 2) {
-                                Text(highlightText(for: item.word ?? "No word"))
-                                    .font(.custom("Pyidaungsu", size: fontSizeDouble+4))
-                                    .bold()
-                                Text(highlightText(for: item.def ?? "No Definition"))
-                                    .font(.custom("Pyidaungsu", size: fontSizeDouble))
-                                    .foregroundColor(.secondary)
-                                    .lineLimit(3)
-                            }
-                            .padding(.vertical, 5)
+                    List(words, id: \.objectID) { item in
+                        /// Lazy NavigationLink: DetailView is only created when the user taps
+                        NavigationLink {
+                            DetailView(dict: item)
+                        } label: {
+                            DictionaryRowView(
+                                word: item.word ?? "No word",
+                                definition: item.def ?? "No Definition",
+                                searchText: searchText,
+                                fontSize: fontSizeDouble
+                            )
+                            .equatable()
                         }
                     }
                 }
             }
-            .searchable(text: $searchText, placement: {
-                if horizonalSize == .compact && verticalSize == .regular {
-                    return .navigationBarDrawer(displayMode: .always)
-                } else {
-                    return .navigationBarDrawer(displayMode: .always)
-                }
-            }(), prompt: NSLocalizedString("Search word", comment: "for searching words"))
+            .searchable(text: $searchText, placement: .navigationBarDrawer(displayMode: .always),
+                         prompt: NSLocalizedString("Search word", comment: "for searching words"))
             .onChange(of: searchText) { newValue in
-                fetchFilteredData(query: newValue)
+                /// Debounce search — wait 300ms after last keystroke before fetching
+                searchTask?.cancel()
+                let task = DispatchWorkItem {
+                    fetchFilteredData(query: newValue)
+                }
+                searchTask = task
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3, execute: task)
+            }
+            .onChange(of: sortMode) { _ in
+                fetchFilteredData(query: searchText)
             }
             .onAppear {
-                loadDataIfNeeded(context: viewContext)
-                fetchInitialData()
+                guard !hasLoadedInitialData else { return }
+                hasLoadedInitialData = true
+                fetchFilteredData(query: "")
                 
-                // Show interstitial ad when data is loaded
-                if adManager.isAdReady {
-                    if let rootViewController = getRootViewController() {
-                        adManager.showAd(from: rootViewController)
+                // Show an interstitial ad after a delay — NOT during launch.
+                // This gives the UI time to fully render before presenting a full-screen ad.
+                DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
+                    if adManager.isAdReady, let rootVC = getRootViewController() {
+                        adManager.showAd(from: rootVC)
                     }
-                } else {
-                    print("Ad wasn't ready")
-                    //adManager.loadInterstitialAd()
                 }
+            }
+            // Re-fetch when the background JSON import finishes
+            .onReceive(NotificationCenter.default.publisher(for: .dictionaryDataDidLoad)
+                .receive(on: DispatchQueue.main)) { _ in
+                fetchFilteredData(query: searchText)
             }
             .toolbar {
                 ToolbarItem(placement: .principal) {
-                    Text((NSLocalizedString("MEM Dictionary", comment: "the dictionary navigation title.")))
-                        .font(.custom("Pyidaungsu", size:fontSizeDouble))
+                    Text(NSLocalizedString("MEM Dictionary", comment: "the dictionary navigation title."))
+                        .font(.custom("Pyidaungsu", size: fontSizeDouble))
                 }
                 ToolbarItem(placement: .primaryAction) {
                     Button(action: {
@@ -97,100 +159,79 @@ struct DictionaryView: View {
         .navigationViewStyle(StackNavigationViewStyle())
     }
     
-    /// Apply sorting based on the user's setting
-    var sortedWords: [MonDic] {
-        let caseInsensitiveSort: (MonDic, MonDic) -> Bool = { ($0.word ?? "").lowercased() < ($1.word ?? "").lowercased() }
+    // MARK: - Data Fetching
+    
+    private func fetchFilteredData(query: String) {
+        let fetchRequest: NSFetchRequest<MonDic> = MonDic.fetchRequest()
+        
+        /// Performance: Only materialize 20 objects at a time (the rest stay as faults)
+        fetchRequest.fetchBatchSize = 20
+        
+        /// Performance: Reduced limits — keeps SwiftUI diffing fast
+        if query.isEmpty {
+            fetchRequest.fetchLimit = 100
+        } else {
+            fetchRequest.fetchLimit = 100
+        }
+        
         switch sortMode {
         case .az:
-            return words.sorted(by: caseInsensitiveSort) // Case-insensitive A-Z sort
+            fetchRequest.sortDescriptors = [
+                NSSortDescriptor(key: "word", ascending: true, selector: #selector(NSString.caseInsensitiveCompare(_:)))
+            ]
         case .za:
-            return words.sorted(by: { ($0.word ?? "").lowercased() > ($1.word ?? "").lowercased() }) // Case-insensitive Z-A sort
+            fetchRequest.sortDescriptors = [
+                NSSortDescriptor(key: "word", ascending: false, selector: #selector(NSString.caseInsensitiveCompare(_:)))
+            ]
         case .random:
-            return words.shuffled()
+            fetchRequest.sortDescriptors = []
         }
-    }
-    
-    /// Fetch initial data when the view appears
-    private func fetchInitialData() {
-        isLoading = true
-        DispatchQueue.main.asyncAfter(deadline: .now()) {
-            fetchFilteredData(query: "")
-            isLoading = false
-        }
-    }
-    
-    /// Fetch data asynchronously based on the search query
-    private func fetchFilteredData(query: String) {
-        isLoading = true
         
-        DispatchQueue.global(qos: .userInitiated).async {
-            let fetchRequest: NSFetchRequest<MonDic> = MonDic.fetchRequest()
+        if !query.isEmpty {
+            let beginsWithPredicate = NSPredicate(format: "word BEGINSWITH[cd] %@", query)
+            let containsInDefPredicate = NSPredicate(format: "def CONTAINS[cd] %@", query)
+            fetchRequest.predicate = NSCompoundPredicate(orPredicateWithSubpredicates: [beginsWithPredicate, containsInDefPredicate])
+        }
+        
+        do {
+            var results = try viewContext.fetch(fetchRequest)
             
-            /// Apply a predicate based on search text
-            if !query.isEmpty {
-                let regex = try! NSRegularExpression(pattern: "^[A-Za-z]")
-                let range = NSRange(location: 0, length: query.utf16.count)
-                let startsWithLetter = regex.firstMatch(in: query, options: [], range: range) != nil
-                
-                if startsWithLetter {
-                    // If query starts with [A-Za-z]
-                    let beginsWithPredicate = NSPredicate(format: "word BEGINSWITH[cd] %@", query)
-                    let containsInDefPredicate = NSPredicate(format: "def CONTAINS[cd] %@", query)
-                    let compoundPredicate = NSCompoundPredicate(orPredicateWithSubpredicates: [beginsWithPredicate, containsInDefPredicate])
-                    fetchRequest.predicate = compoundPredicate
-                } else {
-                    // If query doesn't start with [A-Za-z]
-                    let exactMatchPredicate = NSPredicate(format: "word ==[cd] %@", query)
-                    let containsInDefPredicate = NSPredicate(format: "def ==[cd] %@", query)
-                    let compoundPredicate = NSCompoundPredicate(orPredicateWithSubpredicates: [exactMatchPredicate, containsInDefPredicate])
-                    fetchRequest.predicate = compoundPredicate
-                }
+            if sortMode == .random {
+                results.shuffle()
+            } else if !query.isEmpty {
+                // Prioritize words that BEGIN WITH the query over definition-only matches.
+                // CoreData can't express this ordering, so we partition after the fetch.
+                let lowercasedQuery = query.lowercased()
+                let beginsWith = results.filter { ($0.word ?? "").lowercased().hasPrefix(lowercasedQuery) }
+                let others = results.filter { !($0.word ?? "").lowercased().hasPrefix(lowercasedQuery) }
+                results = beginsWith + others
             }
             
-            do {
-                let results = try viewContext.fetch(fetchRequest)
-                
-                /// Update the UI on the main thread
-                DispatchQueue.main.async {
-                    self.words = results
-                    self.isLoading = false
-                }
-            } catch {
-                print("Failed to fetch data: \(error)")
-                
-                DispatchQueue.main.async {
-                    self.words = []
-                    self.isLoading = false
-                }
-            }
+            self.words = results
+        } catch {
+            print("Failed to fetch data: \(error)")
+            self.words = []
         }
-    }
-    
-    /// Highlight search text in the displayed result
-    private func highlightText(for text: String) -> AttributedString {
-        var attributedString = AttributedString(text)
         
-        if let range = attributedString.range(of: searchText, options: [.caseInsensitive, .diacriticInsensitive]) {
-            attributedString[range].foregroundColor = .blue
-            attributedString[range].font = .bold(.body)()
-        }
-        return attributedString
+        self.isLoading = false
     }
     
-    /// Helper function to get the root view controller in iOS 15+
+    // MARK: - Helpers
+    
     func getRootViewController() -> UIViewController? {
         guard let windowScene = UIApplication.shared
             .connectedScenes
             .first as? UIWindowScene else {
             return nil
         }
-        
         return windowScene.windows.first?.rootViewController
     }
 }
 
 struct DictionaryView_Previews: PreviewProvider {
     static var previews: some View {
-        DictionaryView().environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
+        DictionaryView()
+            .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
+            .environmentObject(LanguageViewModel())
     }
 }

@@ -18,19 +18,35 @@ struct DictionaryWarpper: Codable {
     let data: [DictionaryEntry]
 }
 
-func loadAllJSONFilesAndSaveToCoreData(context: NSManagedObjectContext) {
-    // Get all filenames that match the dictionary JSON naming pattern
-    let fileNames = getJSONFileNames()
-    
-    for fileName in fileNames {
-        let entries = loadJSON(form: fileName)
-        saveEntriesToCoreData(entries: entries, context: context)
-    }
-    
-    print("All JSON data loaded and saved to CoreData successfully!")
+/// Notification posted on the **main thread** after the background import finishes.
+extension Notification.Name {
+    static let dictionaryDataDidLoad = Notification.Name("dictionaryDataDidLoad")
 }
 
-///Function to retrieve all JSON file name matching a pattern
+/// Perform the heavy JSON-to-CoreData import on a **background context**
+/// so the main thread (and UI) stays responsive.
+func loadAllJSONFilesAndSaveToCoreData(container: NSPersistentContainer) {
+    let backgroundContext = container.newBackgroundContext()
+    backgroundContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
+    
+    backgroundContext.perform {
+        let fileNames = getJSONFileNames()
+        
+        for fileName in fileNames {
+            let entries = loadJSON(form: fileName)
+            saveEntriesToCoreData(entries: entries, context: backgroundContext)
+        }
+        
+        print("All JSON data loaded and saved to CoreData successfully!")
+        
+        // Notify on the main thread so the UI can safely re-fetch
+        DispatchQueue.main.async {
+            NotificationCenter.default.post(name: .dictionaryDataDidLoad, object: nil)
+        }
+    }
+}
+
+/// Function to retrieve all JSON file name matching a pattern
 func getJSONFileNames() -> [String] {
     let fileManager = FileManager.default
     let bundleURL = Bundle.main.bundleURL
@@ -48,10 +64,10 @@ func getJSONFileNames() -> [String] {
     }
 }
 
-/// Function to load JSON data from aspecified file.
+/// Function to load JSON data from a specified file.
 func loadJSON(form filename: String) -> [DictionaryEntry] {
     guard let url = Bundle.main.url(forResource: filename, withExtension: "json") else {
-        print("Failed to loacate \(filename).json in bundel")
+        print("Failed to locate \(filename).json in bundle")
         return []
     }
     do {
@@ -65,41 +81,59 @@ func loadJSON(form filename: String) -> [DictionaryEntry] {
     }
 }
 
-/// Function to save loaded entries to CoreData.
+/// Save loaded entries to CoreData in efficient batches using the provided
+/// **background** context. Uses `autoreleasepool` + `reset()` to keep memory
+/// low during 47 K+ inserts, and only resets the background context (never the
+/// viewContext, which would invalidate UI-bound objects).
 func saveEntriesToCoreData(entries: [DictionaryEntry], context: NSManagedObjectContext) {
     guard !entries.isEmpty else {
         print("No entries found in the provided JSON data.")
         return
     }
     
-    for entry in entries {
-        let DicWord = MonDic(context: context)
-        DicWord.id = UUID()
-        DicWord.word = entry.word
-        DicWord.def = entry.def
-        DicWord.isFavorite = false
-        DicWord.lastViewed = nil
+    let batchSize = 500
+    
+    for batchStart in stride(from: 0, to: entries.count, by: batchSize) {
+        autoreleasepool {
+            let batchEnd = min(batchStart + batchSize, entries.count)
+            let batch = entries[batchStart..<batchEnd]
+            
+            for entry in batch {
+                let dicWord = MonDic(context: context)
+                dicWord.id = UUID()
+                dicWord.word = entry.word
+                dicWord.def = entry.def
+                dicWord.isFavorite = false
+                dicWord.lastViewed = nil
+            }
+            
+            do {
+                try context.save()
+            } catch {
+                print("Failed to save batch starting at \(batchStart): \(error)")
+            }
+            
+            /// Reset the *background* context to free memory between batches
+            context.reset()
+        }
     }
-    do {
-        try context.save()
-        print("Data saved to CoreData successfully!")
-    } catch {
-        print("Failed to save data to CoreDate!: \(error)")
-    }
+    
+    print("Data saved to CoreData successfully! (\(entries.count) entries)")
 }
 
 
-func loadDataIfNeeded(context: NSManagedObjectContext) {
-    // Check if CoreData already has data
+/// Check whether CoreData already contains dictionary data.
+/// If empty, kick off a **background** import so the main thread is never blocked.
+func loadDataIfNeeded(container: NSPersistentContainer) {
+    let context = container.viewContext
     let fetchRequest: NSFetchRequest<MonDic> = MonDic.fetchRequest()
-    fetchRequest.fetchLimit = 1 // Limit to 1 to improve performance
+    fetchRequest.fetchLimit = 1
     
     do {
         let count = try context.count(for: fetchRequest)
         if count == 0 {
-            // No data in CoreData, so load from JSON
-            //loadJSONAndSaveToCoreData(context: context)
-            loadAllJSONFilesAndSaveToCoreData(context: context)
+            // No data in CoreData — import on a background thread
+            loadAllJSONFilesAndSaveToCoreData(container: container)
         } else {
             print("CoreData already has data, skipping JSON import.")
         }

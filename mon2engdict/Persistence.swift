@@ -36,6 +36,7 @@ struct PersistenceController {
             container.persistentStoreDescriptions.first!.url = URL(fileURLWithPath: "/dev/null")
         }
         container.viewContext.automaticallyMergesChangesFromParent = true
+        container.viewContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
         container.loadPersistentStores(completionHandler: { (storeDescription, error) in
             if let error = error as NSError? {
                 // Replace this implementation with code to handle the error appropriately.
@@ -61,9 +62,9 @@ struct PersistenceController {
             do {
                 try context.save()
             } catch {
-                // Handle the error appropriately in a real app
+                // Log error instead of crashing in production
                 let nsError = error as NSError
-                fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
+                print("CoreData save error: \(nsError), \(nsError.userInfo)")
             }
         }
     }

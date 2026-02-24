@@ -12,7 +12,7 @@ struct AddWordView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @Environment(\.dismiss) var dismiss
     @Environment(\.fontSize) var fontSize
-    @StateObject var languageViewModel = LanguageViewModel()
+    @EnvironmentObject var languageViewModel: LanguageViewModel
     @AppStorage("fontSize") private var fontSizeDouble: Double = 16
     
     @State private var wordAdd = ""
@@ -82,4 +82,5 @@ struct AddWordView: View {
 
 #Preview {
     AddWordView()
+        .environmentObject(LanguageViewModel())
 }
