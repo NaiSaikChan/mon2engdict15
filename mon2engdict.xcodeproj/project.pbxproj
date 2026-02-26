@@ -29,6 +29,7 @@
 		71E57BAE2C9EE37F00FE6AC7 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 71E57BAD2C9EE37F00FE6AC7 /* Launch Screen.storyboard */; };
 		71E57BB12C9F0AEF00FE6AC7 /* GoogleMobileAds in Frameworks */ = {isa = PBXBuildFile; productRef = 71E57BB02C9F0AEF00FE6AC7 /* GoogleMobileAds */; };
 		71E57BB32C9F0CF700FE6AC7 /* AdMobInterstitial.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71E57BB22C9F0CF700FE6AC7 /* AdMobInterstitial.swift */; };
+		71F0A0012F5074A000BANNE1 /* BannerAdView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71F0A0002F5074A000BANNE1 /* BannerAdView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -55,6 +56,7 @@
 		71E57BA52C9EB52500FE6AC7 /* AddWordView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddWordView.swift; sourceTree = "<group>"; };
 		71E57BAD2C9EE37F00FE6AC7 /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 		71E57BB22C9F0CF700FE6AC7 /* AdMobInterstitial.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdMobInterstitial.swift; sourceTree = "<group>"; };
+		71F0A0002F5074A000BANNE1 /* BannerAdView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerAdView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -92,6 +94,7 @@
 				717074882C9B30D800775317 /* Bundle+Extensions.swift */,
 				716A0F952C9C7E5F00537B25 /* DataLoader.swift */,
 				71E57BB22C9F0CF700FE6AC7 /* AdMobInterstitial.swift */,
+				71F0A0002F5074A000BANNE1 /* BannerAdView.swift */,
 			);
 			path = DataModel;
 			sourceTree = "<group>";
@@ -239,6 +242,7 @@
 				717074872C9B1D8E00775317 /* LanguageManager.swift in Sources */,
 				716A0F962C9C7E5F00537B25 /* DataLoader.swift in Sources */,
 				71E57BB32C9F0CF700FE6AC7 /* AdMobInterstitial.swift in Sources */,
+				71F0A0012F5074A000BANNE1 /* BannerAdView.swift in Sources */,
 				71E57BA62C9EB52500FE6AC7 /* AddWordView.swift in Sources */,
 				71BB72D12C9A403300138B14 /* mon2engdictApp.swift in Sources */,
 				71536D212C9B8C79005272DA /* DictionaryView.swift in Sources */,

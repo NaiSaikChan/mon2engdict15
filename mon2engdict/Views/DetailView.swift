@@ -7,6 +7,7 @@
 
 import SwiftUI
 import AVFoundation
+import GoogleMobileAds
 
 struct DetailView: View {
     @State var entry: DictionaryEntry
@@ -19,8 +20,11 @@ struct DetailView: View {
     private let synthesizer = AVSpeechSynthesizer()
     private let dbManager = DatabaseManager.shared
     
+    private let bannerAdUnitID = "ca-app-pub-2824674932258413/4625845101"
+    
     var body: some View {
-        ScrollView {
+        VStack(spacing: 0) {
+            ScrollView {
             VStack(spacing: 20) {
                 // MARK: - Word Header Card
                 VStack(spacing: 12) {
@@ -139,6 +143,15 @@ struct DetailView: View {
             }
             .padding(.horizontal, 16)
             .padding(.top, 8)
+        }
+            
+            // MARK: - Banner Ad (anchored at bottom)
+            GeometryReader { geometry in
+                let adSize = GADCurrentOrientationAnchoredAdaptiveBannerAdSizeWithWidth(geometry.size.width)
+                BannerAdView(adUnitID: bannerAdUnitID, width: geometry.size.width)
+                    .frame(width: adSize.size.width, height: adSize.size.height)
+            }
+            .frame(height: 60)
         }
         .background(Color(.systemGroupedBackground))
         .navigationBarTitleDisplayMode(.inline)
