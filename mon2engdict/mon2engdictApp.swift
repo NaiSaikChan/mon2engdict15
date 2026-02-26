@@ -12,17 +12,14 @@ import GoogleMobileAds
 struct mon2engdictApp: App {
     @State private var currentLanguage = LanguageManager.shared.currentLanguage()
     
-    let persistenceController = PersistenceController.shared
-    
     init() {
-        // Load JSON into CoreData on a background thread (non-blocking).
-        loadDataIfNeeded(container: PersistenceController.shared.container)
+        // Initialize SQLite database (copies bundle DB to Documents on first launch)
+        _ = DatabaseManager.shared
     }
     
     var body: some Scene {
         WindowGroup {
             ContentView()
-                .environment(\.managedObjectContext, persistenceController.container.viewContext)
                 .onReceive(NotificationCenter.default.publisher(for: NSNotification.Name("LanguageChanged"))) { _ in
                     currentLanguage = LanguageManager.shared.currentLanguage()
                 }

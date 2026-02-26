@@ -61,7 +61,7 @@ struct SettingsView: View {
                     
                     Picker("", selection: $sortMode) {
                         ForEach(SortMode.allCases, id: \.self) { mode in
-                            Text(mode.disName).tag(mode)
+                            Text(mode.displayName).tag(mode)
                                 .font(.custom("Pyidaungsu", size: fontSize))
                         }
                     }
@@ -257,7 +257,7 @@ enum SortMode: String, CaseIterable {
     case za
     case random
     
-    var disName: String {
+    var displayName: String {
         switch self {
         case .az: return NSLocalizedString("A-Z", comment: "a to z")
         case .za: return NSLocalizedString("Z-A", comment: "z to a")

@@ -6,12 +6,10 @@
 //
 
 import SwiftUI
-import CoreData
 import AVFoundation
 
 struct DetailView: View {
-    @ObservedObject var dict: MonDic
-    @Environment(\.managedObjectContext) private var viewContext
+    @State var entry: DictionaryEntry
     @Environment(\.colorScheme) private var colorScheme
     @AppStorage("fontSize") private var fontSizeDouble: Double = 16
     
@@ -19,6 +17,7 @@ struct DetailView: View {
     @State private var showCopied = false
     
     private let synthesizer = AVSpeechSynthesizer()
+    private let dbManager = DatabaseManager.shared
     
     var body: some View {
         ScrollView {
@@ -27,16 +26,16 @@ struct DetailView: View {
                 VStack(spacing: 12) {
                     HStack(alignment: .top) {
                         // First-letter avatar (matching DictionaryRowView)
-                        let letter = dict.word?.first ?? "?"
+                        let letter = entry.word.first ?? "?"
                         Text(String(letter).uppercased())
                             .font(.system(size: 22, weight: .bold, design: .rounded))
                             .foregroundColor(.white)
                             .frame(width: 52, height: 52)
-                            .background(avatarColorForDetail(for: letter))
+                            .background(avatarColor(for: letter))
                             .clipShape(Circle())
                         
                         VStack(alignment: .leading, spacing: 4) {
-                            Text(dict.word ?? "")
+                            Text(entry.word)
                                 .font(.custom("Pyidaungsu", size: fontSizeDouble + 8))
                                 .fontWeight(.bold)
                                 .textSelection(.enabled)
@@ -64,12 +63,12 @@ struct DetailView: View {
                                 }
                             }
                         } label: {
-                            Image(systemName: dict.isFavorite ? "heart.fill" : "heart")
+                            Image(systemName: entry.isFavorite ? "heart.fill" : "heart")
                                 .font(.title2)
-                                .foregroundColor(dict.isFavorite ? .pink : .gray)
+                                .foregroundColor(entry.isFavorite ? .pink : .gray)
                                 .scaleEffect(heartScale)
                         }
-                        .accessibilityLabel(dict.isFavorite
+                        .accessibilityLabel(entry.isFavorite
                             ? NSLocalizedString("Remove from favorites", comment: "")
                             : NSLocalizedString("Add to favorites", comment: ""))
                     }
@@ -88,7 +87,7 @@ struct DetailView: View {
                         .font(.custom("Pyidaungsu", size: fontSizeDouble - 1))
                         .foregroundStyle(.secondary)
                     
-                    Text(dict.def ?? "")
+                    Text(entry.definition)
                         .font(.custom("Pyidaungsu", size: fontSizeDouble + 1))
                         .lineSpacing(6)
                         .textSelection(.enabled)
@@ -110,7 +109,7 @@ struct DetailView: View {
                         color: .blue,
                         fontSize: fontSizeDouble
                     ) {
-                        pronounceWord(dict.word ?? "", language: "en-US")
+                        pronounceWord(entry.word, language: "en-US")
                     }
                     
                     // Copy
@@ -155,22 +154,22 @@ struct DetailView: View {
     // MARK: - Actions
     
     private func toggleFavorite() {
-        dict.isFavorite.toggle()
-        do {
-            try viewContext.save()
-        } catch {
-            print("Failed to save context: \(error)")
-        }
+        let newValue = dbManager.toggleFavorite(id: entry.id, currentValue: entry.isFavorite)
+        entry.isFavorite = newValue
     }
     
     private func pronounceWord(_ text: String, language: String) {
+        if synthesizer.isSpeaking {
+            synthesizer.stopSpeaking(at: .immediate)
+        }
         let utterance = AVSpeechUtterance(string: text)
         utterance.voice = AVSpeechSynthesisVoice(language: language)
+        utterance.rate = AVSpeechUtteranceDefaultSpeechRate
         synthesizer.speak(utterance)
     }
     
     private func copyToClipboard() {
-        let text = "\(dict.word ?? "")\n\(dict.def ?? "")"
+        let text = "\(entry.word)\n\(entry.definition)"
         UIPasteboard.general.string = text
         withAnimation {
             showCopied = true
@@ -183,11 +182,18 @@ struct DetailView: View {
     }
     
     private func shareWord() {
-        let text = "\(dict.word ?? "") - \(dict.def ?? "")"
+        let text = "\(entry.word) - \(entry.definition)"
         let activityVC = UIActivityViewController(activityItems: [text], applicationActivities: nil)
         if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
            let rootVC = windowScene.windows.first?.rootViewController {
-            rootVC.present(activityVC, animated: true)
+            // Walk up to the topmost presented controller to avoid presentation conflicts
+            var topVC = rootVC
+            while let presented = topVC.presentedViewController {
+                topVC = presented
+            }
+            // iPad popover source
+            activityVC.popoverPresentationController?.sourceView = topVC.view
+            topVC.present(activityVC, animated: true)
         }
     }
 }
@@ -220,26 +226,12 @@ private struct ActionButton: View {
     }
 }
 
-// MARK: - Avatar Color (shared logic)
-
-private func avatarColorForDetail(for letter: Character) -> Color {
-    let colors: [Color] = [.blue, .purple, .orange, .pink, .teal, .indigo, .mint, .cyan, .brown, .green]
-    let index = Int(letter.asciiValue ?? 0) % colors.count
-    return colors[index]
-}
-
 // MARK: - Preview
 
 struct DetailView_Previews: PreviewProvider {
     static var previews: some View {
-        let context = PersistenceController.preview.container.viewContext
-        let sampleWord = MonDic(context: context)
-        sampleWord.word = "Hello"
-        sampleWord.def = "မ္ၚဵုရအဴ"
-        return NavigationView {
-            DetailView(dict: sampleWord)
-                .environment(\.managedObjectContext, context)
+        NavigationView {
+            DetailView(entry: DictionaryEntry(id: 1, word: "Hello", definition: "မ္ၚဵုရအဴ", isFavorite: false))
         }
     }
 }
-

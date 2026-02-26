@@ -6,22 +6,17 @@
 //
 
 import SwiftUI
-import CoreData
 
 struct FavoritesView: View {
-    @Environment(\.managedObjectContext) private var viewContext
     @AppStorage("fontSize") private var fontSizeDouble: Double = 16
+    @State private var favorites: [DictionaryEntry] = []
     
-    @FetchRequest(
-        sortDescriptors: [NSSortDescriptor(keyPath: \MonDic.word, ascending: true)],
-        predicate: NSPredicate(format: "isFavorite == true"),
-        animation: .default)
-    private var dictionary: FetchedResults<MonDic>
+    private let dbManager = DatabaseManager.shared
     
     var body: some View {
         NavigationView {
             Group {
-                if dictionary.isEmpty {
+                if favorites.isEmpty {
                     // Empty state
                     VStack(spacing: 16) {
                         Spacer()
@@ -42,13 +37,13 @@ struct FavoritesView: View {
                     .frame(maxWidth: .infinity)
                 } else {
                     List {
-                        ForEach(dictionary) { item in
+                        ForEach(favorites) { item in
                             NavigationLink {
-                                DetailView(dict: item)
+                                DetailView(entry: item)
                             } label: {
                                 DictionaryRowView(
-                                    word: item.word ?? "",
-                                    definition: item.def ?? "",
+                                    word: item.word,
+                                    definition: item.definition,
                                     searchText: "",
                                     fontSize: fontSizeDouble,
                                     isFavorite: item.isFavorite
@@ -67,36 +62,41 @@ struct FavoritesView: View {
                         Text(NSLocalizedString("Favorites", comment: "Favorites navigation title"))
                             .font(.custom("Pyidaungsu", size: fontSizeDouble))
                             .fontWeight(.semibold)
-                        if !dictionary.isEmpty {
-                            Text("\(dictionary.count) " + NSLocalizedString("words", comment: "result count label"))
+                        if !favorites.isEmpty {
+                            Text("\(favorites.count) " + NSLocalizedString("words", comment: "result count label"))
                                 .font(.custom("Pyidaungsu", size: fontSizeDouble - 4))
                                 .foregroundStyle(.secondary)
                         }
                     }
                 }
             }
+            .onAppear {
+                Task {
+                    await loadFavorites()
+                }
+            }
         }
         .navigationViewStyle(StackNavigationViewStyle())
     }
     
-    // MARK: - Swipe to Unfavorite
+    // MARK: - Data
+    
+    @MainActor
+    private func loadFavorites() async {
+        favorites = await dbManager.fetchFavoritesAsync()
+    }
     
     private func unfavoriteItems(at offsets: IndexSet) {
         for index in offsets {
-            let item = dictionary[index]
-            item.isFavorite = false
+            let item = favorites[index]
+            dbManager.setFavorite(id: item.id, value: false)
         }
-        do {
-            try viewContext.save()
-        } catch {
-            print("Failed to unfavorite: \(error)")
-        }
+        favorites.remove(atOffsets: offsets)
     }
 }
 
 struct FavoritesView_Previews: PreviewProvider {
     static var previews: some View {
-        FavoritesView().environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
+        FavoritesView()
     }
 }
-

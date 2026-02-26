@@ -7,7 +7,6 @@
 import SwiftUI
 
 struct AddWordView: View {
-    @Environment(\.managedObjectContext) private var viewContext
     @Environment(\.dismiss) var dismiss
     @EnvironmentObject var languageViewModel: LanguageViewModel
     @AppStorage("fontSize") private var fontSizeDouble: Double = 16
@@ -17,6 +16,7 @@ struct AddWordView: View {
     @FocusState private var focusedField: Field?
     
     private enum Field { case word, definition }
+    private let dbManager = DatabaseManager.shared
     
     private var canSave: Bool {
         !wordAdd.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty &&
@@ -132,17 +132,10 @@ struct AddWordView: View {
         let trimmedDef = defAdd.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmedWord.isEmpty, !trimmedDef.isEmpty else { return }
         
-        let newWord = MonDic(context: viewContext)
-        newWord.id = UUID()
-        newWord.word = trimmedWord
-        newWord.def = trimmedDef
-        newWord.isFavorite = true
-        newWord.lastViewed = nil
-        
-        do {
-            try viewContext.save()
-        } catch {
-            print("Failed to save new word: \(error)")
+        if let _ = dbManager.addWord(word: trimmedWord, definition: trimmedDef) {
+            print("New word saved successfully.")
+        } else {
+            print("Failed to save new word.")
         }
     }
 }

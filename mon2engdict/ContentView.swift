@@ -6,10 +6,8 @@
 //
 
 import SwiftUI
-import CoreData
 
 struct ContentView: View {
-    @Environment(\.managedObjectContext) private var viewContext
     @StateObject var languageViewModel = LanguageViewModel()
     @AppStorage("fontSize") private var fontSizeDouble: Double = 16
     
@@ -49,8 +47,6 @@ struct ContentView: View {
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        Group {
-            ContentView().environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
-        }
+        ContentView()
     }
 }

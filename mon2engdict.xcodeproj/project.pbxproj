@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7117003B2F4FA10800910B45 /* DatabaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7117003A2F4FA0F900910B45 /* DatabaseManager.swift */; };
+		7117003D2F4FAD0F00910B45 /* engmondict.db in Resources */ = {isa = PBXBuildFile; fileRef = 7117003C2F4FAD0F00910B45 /* engmondict.db */; };
+		711700422F4FB66400910B45 /* SQLite in Frameworks */ = {isa = PBXBuildFile; productRef = 711700412F4FB66400910B45 /* SQLite */; };
 		71536D212C9B8C79005272DA /* DictionaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71536D202C9B8C79005272DA /* DictionaryView.swift */; };
 		716A0F922C9C630300537B25 /* FavoritesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716A0F912C9C630300537B25 /* FavoritesView.swift */; };
 		716A0F942C9C671100537B25 /* DetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716A0F932C9C671100537B25 /* DetailView.swift */; };
@@ -19,12 +22,9 @@
 		71BB72D32C9A403300138B14 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71BB72D22C9A403300138B14 /* ContentView.swift */; };
 		71BB72D52C9A403600138B14 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 71BB72D42C9A403600138B14 /* Assets.xcassets */; };
 		71BB72D82C9A403600138B14 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 71BB72D72C9A403600138B14 /* Preview Assets.xcassets */; };
-		71BB72DA2C9A403600138B14 /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71BB72D92C9A403600138B14 /* Persistence.swift */; };
-		71BB72DD2C9A403600138B14 /* mon2engdict.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 71BB72DB2C9A403600138B14 /* mon2engdict.xcdatamodeld */; };
 		71BB72E52C9A441A00138B14 /* Pyidaungsu-2.5.3_Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 71BB72E42C9A441A00138B14 /* Pyidaungsu-2.5.3_Regular.ttf */; };
 		71BB72E72C9A444D00138B14 /* Mon3Anonta1.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 71BB72E62C9A444D00138B14 /* Mon3Anonta1.ttf */; };
 		71BB72EA2C9A44B700138B14 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 71BB72EC2C9A44B700138B14 /* Localizable.strings */; };
-		71BB72EE2C9A461A00138B14 /* mondict.json in Resources */ = {isa = PBXBuildFile; fileRef = 71BB72ED2C9A461A00138B14 /* mondict.json */; };
 		71E57BA62C9EB52500FE6AC7 /* AddWordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71E57BA52C9EB52500FE6AC7 /* AddWordView.swift */; };
 		71E57BAE2C9EE37F00FE6AC7 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 71E57BAD2C9EE37F00FE6AC7 /* Launch Screen.storyboard */; };
 		71E57BB12C9F0AEF00FE6AC7 /* GoogleMobileAds in Frameworks */ = {isa = PBXBuildFile; productRef = 71E57BB02C9F0AEF00FE6AC7 /* GoogleMobileAds */; };
@@ -32,6 +32,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		7117003A2F4FA0F900910B45 /* DatabaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseManager.swift; sourceTree = "<group>"; };
+		7117003C2F4FAD0F00910B45 /* engmondict.db */ = {isa = PBXFileReference; lastKnownFileType = file; path = engmondict.db; sourceTree = "<group>"; };
 		71536D202C9B8C79005272DA /* DictionaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DictionaryView.swift; sourceTree = "<group>"; };
 		716A0F912C9C630300537B25 /* FavoritesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesView.swift; sourceTree = "<group>"; };
 		716A0F932C9C671100537B25 /* DetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailView.swift; sourceTree = "<group>"; };
@@ -47,12 +49,9 @@
 		71BB72D22C9A403300138B14 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		71BB72D42C9A403600138B14 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		71BB72D72C9A403600138B14 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		71BB72D92C9A403600138B14 /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
-		71BB72DC2C9A403600138B14 /* mon2engdict.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = mon2engdict.xcdatamodel; sourceTree = "<group>"; };
 		71BB72E42C9A441A00138B14 /* Pyidaungsu-2.5.3_Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Pyidaungsu-2.5.3_Regular.ttf"; sourceTree = "<group>"; };
 		71BB72E62C9A444D00138B14 /* Mon3Anonta1.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Mon3Anonta1.ttf; sourceTree = "<group>"; };
 		71BB72EB2C9A44B700138B14 /* my-MM */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "my-MM"; path = "my-MM.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		71BB72ED2C9A461A00138B14 /* mondict.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = mondict.json; sourceTree = "<group>"; };
 		71E57BA52C9EB52500FE6AC7 /* AddWordView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddWordView.swift; sourceTree = "<group>"; };
 		71E57BAD2C9EE37F00FE6AC7 /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 		71E57BB22C9F0CF700FE6AC7 /* AdMobInterstitial.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdMobInterstitial.swift; sourceTree = "<group>"; };
@@ -63,6 +62,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				711700422F4FB66400910B45 /* SQLite in Frameworks */,
 				71E57BB12C9F0AEF00FE6AC7 /* GoogleMobileAds in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -85,8 +85,8 @@
 		717074812C9B0CE200775317 /* DataModel */ = {
 			isa = PBXGroup;
 			children = (
-				71BB72DB2C9A403600138B14 /* mon2engdict.xcdatamodeld */,
-				71BB72ED2C9A461A00138B14 /* mondict.json */,
+				7117003A2F4FA0F900910B45 /* DatabaseManager.swift */,
+				7117003C2F4FAD0F00910B45 /* engmondict.db */,
 				717074862C9B1D8E00775317 /* LanguageManager.swift */,
 				7170748A2C9B330100775317 /* LanguageViewModel.swift */,
 				717074882C9B30D800775317 /* Bundle+Extensions.swift */,
@@ -123,7 +123,6 @@
 				71BB72D02C9A403300138B14 /* mon2engdictApp.swift */,
 				71BB72D42C9A403600138B14 /* Assets.xcassets */,
 				71BB72D22C9A403300138B14 /* ContentView.swift */,
-				71BB72D92C9A403600138B14 /* Persistence.swift */,
 				71BB72D62C9A403600138B14 /* Preview Content */,
 			);
 			path = mon2engdict;
@@ -165,6 +164,7 @@
 			name = mon2engdict;
 			packageProductDependencies = (
 				71E57BB02C9F0AEF00FE6AC7 /* GoogleMobileAds */,
+				711700412F4FB66400910B45 /* SQLite */,
 			);
 			productName = mon2engdict;
 			productReference = 71BB72CD2C9A403300138B14 /* mon2engdict.app */;
@@ -197,6 +197,7 @@
 			mainGroup = 71BB72C42C9A403300138B14;
 			packageReferences = (
 				71E57BAF2C9F0AEF00FE6AC7 /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */,
+				711700402F4FB66400910B45 /* XCRemoteSwiftPackageReference "SQLite" */,
 			);
 			productRefGroup = 71BB72CE2C9A403300138B14 /* Products */;
 			projectDirPath = "";
@@ -213,10 +214,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				71BB72E52C9A441A00138B14 /* Pyidaungsu-2.5.3_Regular.ttf in Resources */,
+				7117003D2F4FAD0F00910B45 /* engmondict.db in Resources */,
 				71BB72D82C9A403600138B14 /* Preview Assets.xcassets in Resources */,
 				71BB72E72C9A444D00138B14 /* Mon3Anonta1.ttf in Resources */,
 				71BB72EA2C9A44B700138B14 /* Localizable.strings in Resources */,
-				71BB72EE2C9A461A00138B14 /* mondict.json in Resources */,
 				71BB72D52C9A403600138B14 /* Assets.xcassets in Resources */,
 				71E57BAE2C9EE37F00FE6AC7 /* Launch Screen.storyboard in Resources */,
 			);
@@ -231,12 +232,11 @@
 			files = (
 				716A0F922C9C630300537B25 /* FavoritesView.swift in Sources */,
 				717074852C9B11F000775317 /* SettingsView.swift in Sources */,
-				71BB72DA2C9A403600138B14 /* Persistence.swift in Sources */,
+				7117003B2F4FA10800910B45 /* DatabaseManager.swift in Sources */,
 				7170748B2C9B330100775317 /* LanguageViewModel.swift in Sources */,
 				71BB72D32C9A403300138B14 /* ContentView.swift in Sources */,
 				716A0F942C9C671100537B25 /* DetailView.swift in Sources */,
 				717074872C9B1D8E00775317 /* LanguageManager.swift in Sources */,
-				71BB72DD2C9A403600138B14 /* mon2engdict.xcdatamodeld in Sources */,
 				716A0F962C9C7E5F00537B25 /* DataLoader.swift in Sources */,
 				71E57BB32C9F0CF700FE6AC7 /* AdMobInterstitial.swift in Sources */,
 				71E57BA62C9EB52500FE6AC7 /* AddWordView.swift in Sources */,
@@ -393,7 +393,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 16;
+				CURRENT_PROJECT_VERSION = 45;
 				DEVELOPMENT_ASSET_PATHS = "\"mon2engdict/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -411,7 +411,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.0;
+				MARKETING_VERSION = 2.5;
 				PRODUCT_BUNDLE_IDENTIFIER = com.maraohnonpon.mon2endict;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -429,7 +429,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 16;
+				CURRENT_PROJECT_VERSION = 45;
 				DEVELOPMENT_ASSET_PATHS = "\"mon2engdict/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -447,7 +447,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.0;
+				MARKETING_VERSION = 2.5;
 				PRODUCT_BUNDLE_IDENTIFIER = com.maraohnonpon.mon2endict;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -483,6 +483,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		711700402F4FB66400910B45 /* XCRemoteSwiftPackageReference "SQLite" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/stephencelis/SQLite.swift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.15.5;
+			};
+		};
 		71E57BAF2C9F0AEF00FE6AC7 /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/googleads/swift-package-manager-google-mobile-ads.git";
@@ -494,25 +502,17 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		711700412F4FB66400910B45 /* SQLite */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 711700402F4FB66400910B45 /* XCRemoteSwiftPackageReference "SQLite" */;
+			productName = SQLite;
+		};
 		71E57BB02C9F0AEF00FE6AC7 /* GoogleMobileAds */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 71E57BAF2C9F0AEF00FE6AC7 /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */;
 			productName = GoogleMobileAds;
 		};
 /* End XCSwiftPackageProductDependency section */
-
-/* Begin XCVersionGroup section */
-		71BB72DB2C9A403600138B14 /* mon2engdict.xcdatamodeld */ = {
-			isa = XCVersionGroup;
-			children = (
-				71BB72DC2C9A403600138B14 /* mon2engdict.xcdatamodel */,
-			);
-			currentVersion = 71BB72DC2C9A403600138B14 /* mon2engdict.xcdatamodel */;
-			path = mon2engdict.xcdatamodeld;
-			sourceTree = "<group>";
-			versionGroupType = wrapper.xcdatamodel;
-		};
-/* End XCVersionGroup section */
 	};
 	rootObject = 71BB72C52C9A403300138B14 /* Project object */;
 }

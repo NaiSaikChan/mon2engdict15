@@ -6,14 +6,13 @@
 //
 
 import SwiftUI
-import CoreData
 
-// MARK: - First-letter avatar color helper
-private let avatarColors: [Color] = [
+// MARK: - First-letter avatar color helper (shared across views)
+let avatarColors: [Color] = [
     .blue, .purple, .orange, .pink, .teal, .indigo, .mint, .cyan, .brown, .green
 ]
 
-private func avatarColor(for letter: Character) -> Color {
+func avatarColor(for letter: Character) -> Color {
     let index = Int(letter.asciiValue ?? 0) % avatarColors.count
     return avatarColors[index]
 }
@@ -134,11 +133,11 @@ struct EmptySearchStateView: View {
 
 struct DictionaryView: View {
     @State private var searchText = ""
-    @State private var words: [MonDic] = []
+    @State private var words: [DictionaryEntry] = []
     @State private var isLoading: Bool = true
     @State private var showingAddWord = false
     @State private var hasLoadedInitialData = false
-    @State private var searchTask: DispatchWorkItem?
+    @State private var searchTask: Task<Void, Never>?
     
     @AppStorage("sortMode") private var sortMode: SortMode = .az
     @AppStorage("fontSize") private var fontSizeDouble: Double = 16
@@ -146,7 +145,7 @@ struct DictionaryView: View {
     @EnvironmentObject var languageViewModel: LanguageViewModel
     @StateObject var adManager = InterstitialAdManager()
     
-    @Environment(\.managedObjectContext) private var viewContext
+    private let dbManager = DatabaseManager.shared
     
     var body: some View {
         NavigationView {
@@ -176,13 +175,13 @@ struct DictionaryView: View {
                 } else if words.isEmpty {
                     EmptySearchStateView(query: searchText)
                 } else {
-                    List(words, id: \.objectID) { item in
+                    List(words) { item in
                         NavigationLink {
-                            DetailView(dict: item)
+                            DetailView(entry: item)
                         } label: {
                             DictionaryRowView(
-                                word: item.word ?? "No word",
-                                definition: item.def ?? "No Definition",
+                                word: item.word,
+                                definition: item.definition,
                                 searchText: searchText,
                                 fontSize: fontSizeDouble,
                                 isFavorite: item.isFavorite
@@ -196,30 +195,31 @@ struct DictionaryView: View {
             .searchable(text: $searchText, placement: .navigationBarDrawer(displayMode: .always),
                          prompt: NSLocalizedString("Search word", comment: "for searching words"))
             .onChange(of: searchText) { newValue in
+                // Cancel previous search and debounce with async Task
                 searchTask?.cancel()
-                let task = DispatchWorkItem {
-                    fetchFilteredData(query: newValue)
+                searchTask = Task {
+                    try? await Task.sleep(nanoseconds: 300_000_000) // 300ms debounce
+                    guard !Task.isCancelled else { return }
+                    await fetchData(query: newValue)
                 }
-                searchTask = task
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3, execute: task)
             }
             .onChange(of: sortMode) { _ in
-                fetchFilteredData(query: searchText)
+                Task {
+                    await fetchData(query: searchText)
+                }
             }
             .onAppear {
                 guard !hasLoadedInitialData else { return }
                 hasLoadedInitialData = true
-                fetchFilteredData(query: "")
+                Task {
+                    await fetchData(query: "")
+                }
                 
                 DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
                     if adManager.isAdReady, let rootVC = getRootViewController() {
                         adManager.showAd(from: rootVC)
                     }
                 }
-            }
-            .onReceive(NotificationCenter.default.publisher(for: .dictionaryDataDidLoad)
-                .receive(on: DispatchQueue.main)) { _ in
-                fetchFilteredData(query: searchText)
             }
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -244,63 +244,40 @@ struct DictionaryView: View {
                     }
                 }
             }
-            .sheet(isPresented: $showingAddWord) {
+            .sheet(isPresented: $showingAddWord, onDismiss: {
+                // Refresh list after adding a new word
+                Task {
+                    await fetchData(query: searchText)
+                }
+            }) {
                 AddWordView()
             }
         }
         .navigationViewStyle(StackNavigationViewStyle())
     }
     
-    // MARK: - Data Fetching
+    // MARK: - Data Fetching (async, off main thread)
     
-    private func fetchFilteredData(query: String) {
-        let fetchRequest: NSFetchRequest<MonDic> = MonDic.fetchRequest()
-        fetchRequest.fetchBatchSize = 20
-        
+    @MainActor
+    private func fetchData(query: String) async {
         if query.isEmpty {
-            fetchRequest.fetchLimit = 100
-        } else {
-            fetchRequest.fetchLimit = 100
-        }
-        
-        switch sortMode {
-        case .az:
-            fetchRequest.sortDescriptors = [
-                NSSortDescriptor(key: "word", ascending: true, selector: #selector(NSString.caseInsensitiveCompare(_:)))
-            ]
-        case .za:
-            fetchRequest.sortDescriptors = [
-                NSSortDescriptor(key: "word", ascending: false, selector: #selector(NSString.caseInsensitiveCompare(_:)))
-            ]
-        case .random:
-            fetchRequest.sortDescriptors = []
-        }
-        
-        if !query.isEmpty {
-            let beginsWithPredicate = NSPredicate(format: "word BEGINSWITH[cd] %@", query)
-            let containsInDefPredicate = NSPredicate(format: "def CONTAINS[cd] %@", query)
-            fetchRequest.predicate = NSCompoundPredicate(orPredicateWithSubpredicates: [beginsWithPredicate, containsInDefPredicate])
-        }
-        
-        do {
-            var results = try viewContext.fetch(fetchRequest)
-            
-            if sortMode == .random {
+            switch sortMode {
+            case .az:
+                words = await dbManager.fetchAllAsync(limit: 500, sortAZ: true)
+            case .za:
+                words = await dbManager.fetchAllAsync(limit: 500, sortAZ: false)
+            case .random:
+                var results = await dbManager.fetchAllAsync(limit: 500, sortAZ: true)
                 results.shuffle()
-            } else if !query.isEmpty {
-                let lowercasedQuery = query.lowercased()
-                let beginsWith = results.filter { ($0.word ?? "").lowercased().hasPrefix(lowercasedQuery) }
-                let others = results.filter { !($0.word ?? "").lowercased().hasPrefix(lowercasedQuery) }
-                results = beginsWith + others
+                words = results
             }
-            
-            self.words = results
-        } catch {
-            print("Failed to fetch data: \(error)")
-            self.words = []
+        } else {
+            words = await dbManager.searchAsync(query: query, limit: 500)
+            if sortMode == .random {
+                words.shuffle()
+            }
         }
-        
-        self.isLoading = false
+        isLoading = false
     }
     
     // MARK: - Helpers
@@ -318,7 +295,6 @@ struct DictionaryView: View {
 struct DictionaryView_Previews: PreviewProvider {
     static var previews: some View {
         DictionaryView()
-            .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
             .environmentObject(LanguageViewModel())
     }
 }
